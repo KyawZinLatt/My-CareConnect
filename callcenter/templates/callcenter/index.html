@@ -1,0 +1,99 @@
+{% extends 'main.html' %} {% block content %}
+<main>
+  <section class="py-4 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Call Center Clients</h1>
+        <p class="lead text-muted">
+        </p>
+      </div>
+      <a href="{% url 'index' %}"> New Client </a>
+    </div>
+  </section>
+
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        {% comment %} {% for employee in myEmployees %} {% endcomment %}
+        <div class="col">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              {% comment %} {% cycle 'bg-warning' 'bg-danger' 'bg-primary' 'bg-info' as bgcolor silent%} {% endcomment %}
+              <h5 class="card-title {{bgcolor}}">09901234567</h5>
+              <p class="card-text">{{employee.title}}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+
+                  <a href="#" type="button" class="btn btn-sm btn-outline-secondary">
+                    Update
+                  </a>
+                </div>
+                <small class="text-muted">Male</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% comment %} {% endfor %} {% endcomment %}
+        <div class="col">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              {% comment %} {% cycle 'bg-warning' 'bg-danger' 'bg-primary' 'bg-info' as bgcolor silent%} {% endcomment %}
+              <h5 class="card-title {{bgcolor}}">09234567890</h5>
+              <p class="card-text">{{employee.title}}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+
+                  <a href="#" type="button" class="btn btn-sm btn-outline-secondary">
+                    Update
+                  </a>
+                </div>
+                <small class="text-muted">Female</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              {% comment %} {% cycle 'bg-warning' 'bg-danger' 'bg-primary' 'bg-info' as bgcolor silent%} {% endcomment %}
+              <h5 class="card-title {{bgcolor}}">095678901</h5>
+              <p class="card-text">{{employee.title}}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+
+                  <a href="#" type="button" class="btn btn-sm btn-outline-secondary">
+                    Update
+                  </a>
+                </div>
+                <small class="text-muted">Male</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              {% comment %} {% cycle 'bg-warning' 'bg-danger' 'bg-primary' 'bg-info' as bgcolor silent%} {% endcomment %}
+              <h5 class="card-title {{bgcolor}}">09456789012</h5>
+              <p class="card-text">{{employee.title}}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+
+                  <a href="#" type="button" class="btn btn-sm btn-outline-secondary">
+                    Update
+                  </a>
+                </div>
+                <small class="text-muted">Female</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
