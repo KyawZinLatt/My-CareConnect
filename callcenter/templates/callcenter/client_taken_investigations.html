@@ -1,0 +1,79 @@
+{% extends 'main.html' %}
+
+{% block content %}
+{{ form.media }}
+
+  <div class="container mt-5">
+    <form method="POST" class="row g-3">
+      {% csrf_token %}
+      <h1>Taken Investigations</h1>
+      {% if form.errors%}
+      {% for field, errors in form.errors.items %}
+      {% for error in errors %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>{{error}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endfor %}
+      {% endif %}
+
+      <div class="col-md-6">
+        <label for="{{form.investigation_type.id_for_label}}">{{ form.investigation_type.label }}</label>
+        {{ form.investigation_type }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{form.investigation_result.id_for_label}}">{{ form.investigation_result.label }}</label>
+        {{ form.investigation_result }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{form.investigation_date.id_for_label}}">{{ form.investigation_date.label }}</label>
+        {{ form.investigation_date }}
+      </div>
+
+      <div class="col-12">
+        {{ form.hidden_client_id }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+
+
+
+<script>
+$(document).ready(function() {
+
+  var investigationTypeSelect = $('#investigation-type-select');
+  var investigationResultSelect = $('#investigation-result-select');
+
+  var investigationTypeId;
+
+
+  investigationTypeSelect.on('change', function() {
+    investigationTypeId = this.value;
+    var xhr = new XMLHttpRequest();
+    var url = "{% url 'investigation_results' %}?investigation_type_id=" + investigationTypeId;
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var investigations = JSON.parse(xhr.responseText);
+        investigationResultSelect.html('<option value="">---------</option>');
+        for (var i = 0; i < investigations.length; i++) {
+          investigationResultSelect.append('<option value="' + investigations[i].id + '">' + investigations[i].result_description + '</option>');
+        }
+      } else {
+        console.log(xhr.readyState + ' ' + xhr.status + ' error');
+      }
+    };
+    xhr.send();
+  });
+
+
+
+});
+</script>
+
+
+
+{% endblock %}
+

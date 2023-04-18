@@ -1,0 +1,61 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+
+  <div class="container mt-5">
+    <form method="POST" class="row g-3">
+      {% csrf_token %}
+      <h1>Social Platforms</h1>
+      {% if form.errors%}
+      {% for field, errors in form.errors.items %}
+      {% for error in errors %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>{{error}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endfor %}
+      {% endif %}
+
+
+
+
+      {%comment%}
+      <div class="col-md-6">
+        <label for="name" class="form-label">Name</label>
+        {{ form.name }}
+      </div>
+      <div class="col-md-6">
+        <label for="email" class="form-label">Email</label>
+        {{ form.email }}
+      </div>
+      <div class="col-md-12">
+        <label for="message" class="form-label">Message</label>
+        {{ form.message }}
+      </div>
+      {%endcomment%}
+
+      <div class="col-md-6">
+        <label for="platform1" class="form-label">{{ form.platform1.label }}</label>
+        {{ form.platform1 }}
+      </div>
+      <div class="col-md-6">
+        <label for="platform2" class="form-label">{{ form.platform2.label }}</label>
+        {{ form.platform2 }}
+      </div>
+      <div class="col-md-6">
+        <label for="platform3" class="form-label">{{ form.platform3.label }}</label>
+        {{ form.platform3 }}
+      </div>
+
+      <div class="col-12">
+        {{ form.hidden_client_id }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+
+
+{% endblock %}
+

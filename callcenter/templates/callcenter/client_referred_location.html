@@ -1,0 +1,177 @@
+{% extends 'main.html' %}
+
+{% block content %}
+{{ form.media }}
+
+  <div class="container mt-5">
+    <form method="POST" class="row g-3">
+      {% csrf_token %}
+      <h1>TB Referral</h1>
+      {% if form.errors%}
+      {% for field, errors in form.errors.items %}
+      {% for error in errors %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>{{error}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endfor %}
+      {% endif %}
+
+      <div class="col-md-6">
+        <label for="{{form.state_region.id_for_label}}">{{ form.state_region.label }}</label>
+        {{ form.state_region }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{ form.township.id_for_label }}">{{ form.township.label }}</label>
+        {{ form.township }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{ form.site.id_for_label }}">{{ form.site.label }}</label>
+        {{ form.site }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{ form.clinic.id_for_label }}">{{ form.clinic.label }}</label>
+        {{ form.clinic }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{ form.channel.id_for_label }}">{{ form.channel.label }}</label>
+        {{ form.channel }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{ form.organization.id_for_label }}">{{ form.organization.label }}</label>
+        {{ form.organization }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{ form.refer_date.id_for_label }}">{{ form.refer_date.label }}</label>
+        {{ form.refer_date}}
+      </div>
+
+      <div class="col-12">
+        {{ form.hidden_client_id }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+
+<script>
+
+$(document).ready(function() {
+
+  var stateRegionSelect = $('#state-region-select');
+  var townshipSelect = $('#township-select');
+  var siteSelect = $('#site-select');
+  var clinicSelect = $('#clinic-select');
+  var channelSelect = $('#channel-select');
+  var organizationSelect = $('#organization-select');
+
+  var stateRegionId;
+  var townshipId;
+  var siteId;
+
+  stateRegionSelect.on('change', function() {
+    stateRegionId = this.value;
+    var xhr = new XMLHttpRequest();
+    var url = "{% url 'townships' %}?stage_region_id=" + stateRegionId;
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var townships = JSON.parse(xhr.responseText);
+        townshipSelect.html('<option value="">---------</option>');
+        for (var i = 0; i < townships.length; i++) {
+          townshipSelect.append('<option value="' + townships[i].id + '">' + townships[i].name + '</option>');
+        }
+      } else {
+        console.log(xhr.readyState + ' ' + xhr.status + ' error');
+      }
+    };
+    xhr.send();
+  });
+
+  townshipSelect.on('change', function() {
+    townshipId = this.value;
+    var xhr = new XMLHttpRequest();
+    var url = "{% url 'addresses' %}?stage_region_id=" + stateRegionId + "&township_id=" + townshipId;
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var addresses = JSON.parse(xhr.responseText);
+        siteSelect.html('<option value="">---------</option>');
+        for (var i = 0; i < addresses.length; i++) {
+          siteSelect.append('<option value="' + addresses[i].id + '">' + addresses[i].site_address + ' ' + addresses[i].site_address_mm + '</option>');
+        }
+      } else {
+        console.log(xhr.readyState + ' ' + xhr.status + ' error');
+      }
+    };
+    xhr.send();
+  });
+
+  siteSelect.on('change', function() {
+    siteId = this.value;
+    var xhr = new XMLHttpRequest();
+    var url = "{% url 'clinic' %}?site_location_id=" + siteId;
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var clinic = JSON.parse(xhr.responseText);
+        clinicSelect.html('<option value="">---------</option>');
+        for (var i = 0; i < clinic.length; i++) {
+          clinicSelect.append('<option value="' + clinic[i].id + '">' + clinic[i].clinic_name + ' ' + clinic[i].clinic_name_mm + '</option>');
+        }
+      } else {
+        console.log(xhr.readyState + ' ' + xhr.status + ' error');
+      }
+    };
+    xhr.send();
+  });
+
+  clinicSelect.on('change', function() {
+    siteId = this.value;
+    var xhr = new XMLHttpRequest();
+    var url = "{% url 'clinic' %}?site_location_id=" + siteId;
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var channel = JSON.parse(xhr.responseText);
+        channelSelect.html('<option value="">---------</option>');
+        for (var i = 0; i < channel.length; i++) {
+          channelSelect.append('<option value="' + channel[i].id + '">' + channel[i].channel__name + '</option>');
+        }
+      } else {
+        console.log(xhr.readyState + ' ' + xhr.status + ' error');
+      }
+    };
+    xhr.send();
+  });
+
+  channelSelect.on('change', function() {
+    siteId = this.value;
+    var xhr = new XMLHttpRequest();
+    var url = "{% url 'clinic' %}?site_location_id=" + siteId;
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var organization = JSON.parse(xhr.responseText);
+        organizationSelect.html('<option value="">---------</option>');
+        for (var i = 0; i < organization.length; i++) {
+          organizationSelect.append('<option value="' + organization[i].id + '">' + organization[i].organization__name + '</option>');
+        }
+      } else {
+        console.log(xhr.readyState + ' ' + xhr.status + ' error');
+      }
+    };
+    xhr.send();
+  });
+
+
+
+});
+
+
+
+</script>
+
+
+{% endblock %}
+

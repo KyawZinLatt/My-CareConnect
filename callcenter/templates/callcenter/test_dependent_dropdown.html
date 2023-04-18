@@ -1,0 +1,88 @@
+{% extends 'main.html' %}
+{% block content %}
+{{ form.media }} 
+<form method="post" id="location-form" data-townships-url="{% url 'townships' %}">
+  {% csrf_token %}
+  
+  
+  <!--<div class="form-group">-->
+  <!--  <label for="datepicker">Select Date:</label>-->
+  <!--  <input type="text" class="form-control datepicker" id="datepicker"/>-->
+  <!--</div>-->
+  <div class="form-group">
+    <label for="{{ form.refer_date.id_for_label }}">{{ form.refer_date.label }}</label>
+    {{ form.refer_date}}
+  </div>
+  <div class="form-group">
+    <label for="{{ form.state_region.id_for_label }}">{{ form.state_region.label }}</label>
+    {{ form.state_region }}
+  </div>
+  <div class="form-group">
+    <label for="{{ form.township.id_for_label }}">{{ form.township.label }}</label>
+    {{ form.township }}
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+// (function() {
+//     var stateRegionSelect = document.getElementById('state-region-select');
+//     var townshipSelect = document.getElementById('township-select');
+//     console.log(stateRegionSelect)
+//     console.log(townshipSelect)
+//     stateRegionSelect.addEventListener('change', function() {
+//         var xhr = new XMLHttpRequest();
+//         console.log(this.value)
+//         xhr.open('GET', "{% url 'townships' %}?stage_region_id=" + this.value, true);
+//         // xhr.open('GET', "{% url 'townships' %}" + this.value, true);
+//         xhr.onreadystatechange = function() {
+//             if (xhr.readyState === 4 && xhr.status === 200) {
+//                 console.log(xhr.readyState +" "+ xhr.status )
+                
+//                 var townships = JSON.parse(xhr.responseText);
+
+//                 townshipSelect.innerHTML = '<option value="">---------</option>';
+//                 for (var i = 0; i < townships.length; i++) {
+//                     townshipSelect.innerHTML += '<option value="' + townships[i].id + '">' + townships[i].name + '</option>';
+//                 }
+//             } else {
+//                 console.log(xhr.readyState +" "+ xhr.status +" error")
+//             }
+//         };
+//         xhr.send();
+//     });
+// })();
+
+
+$(document).ready(function() {
+    
+  var stateRegionSelect = $('#state-region-select');
+  var townshipSelect = $('#township-select');
+  
+  stateRegionSelect.on('change', function() {
+    var xhr = new XMLHttpRequest();
+    var url = "{% url 'townships' %}?stage_region_id=" + this.value;
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var townships = JSON.parse(xhr.responseText);
+        townshipSelect.html('<option value="">---------</option>');
+        for (var i = 0; i < townships.length; i++) {
+          townshipSelect.append('<option value="' + townships[i].id + '">' + townships[i].name + '</option>');
+        }
+      } else {
+        console.log(xhr.readyState + ' ' + xhr.status + ' error');
+      }
+    };
+    xhr.send();
+  });
+});
+
+
+
+</script>
+{% endblock %}
+{% block js %}
+
+
+{% endblock %}

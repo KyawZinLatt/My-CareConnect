@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-import os
+from dotenv import load_dotenv
+#import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,8 +41,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # "coupon_management",
     "callcenter",
     "rest_framework",
+    "django_bootstrap5",
+    "bootstrap_datepicker_plus",
 ]
 
 MIDDLEWARE = [
@@ -81,10 +87,13 @@ DATABASES = {
         # "ENGINE": "django.db.backends.sqlite3",
         # "NAME": BASE_DIR / "db.sqlite3",
         'ENGINE': 'django.db.backends.mysql',
-		'NAME': os.getenv('DATABASE_NAME'),
-		'USER': os.getenv('DATABASE_USERNAME'),
-		'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-		'HOST': os.getenv('DATABASE_HOST'),
+		'NAME': 'psiehealth$callcenter',
+		'USER': 'psiehealth',
+		'PASSWORD': 'Q_kqV2QhyVjJ8_3',
+		'HOST': 'psiehealth.mysql.pythonanywhere-services.com',
+		'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
     }
 }
 
@@ -136,3 +145,7 @@ MEDIA_ROOT = '/home/psiehealth/careconnect/media'
 MEDIA_URL = '/media/'
 STATIC_ROOT = '/home/psiehealth/careconnect/static'
 STATIC_URL = '/static/'
+
+LOGIN_URL = '/login/'
+
+LOGOUT_REDIRECT_URL = 'login'

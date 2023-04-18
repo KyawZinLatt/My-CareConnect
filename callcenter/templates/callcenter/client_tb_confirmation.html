@@ -1,0 +1,45 @@
+{% extends 'main.html' %}
+
+{% block content %}
+{{ form.media }}
+
+  <div class="container mt-5">
+    <form method="POST" class="row g-3">
+      {% csrf_token %}
+      <h1>TB Confirmation</h1>
+      {% if form.errors%}
+      {% for field, errors in form.errors.items %}
+      {% for error in errors %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>{{error}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endfor %}
+      {% endif %}
+
+      <div class="col-md-6">
+        <label for="{{form.bat_confirmed.id_for_label}}">{{ form.bat_confirmed.label }}</label>
+        {{ form.bat_confirmed }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{form.tb_diagnosis.id_for_label}}">{{ form.tb_diagnosis.label }}</label>
+        {{ form.tb_diagnosis }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{form.diagnosis_date.id_for_label}}">{{ form.diagnosis_date.label }}</label>
+        {{ form.diagnosis_date }}
+      </div>
+
+      <div class="col-12">
+        {{ form.hidden_client_id }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+
+
+
+
+{% endblock %}
+

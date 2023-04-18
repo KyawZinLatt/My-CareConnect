@@ -1,0 +1,56 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+
+  <div class="container mt-5">
+    <form method="POST" class="row g-3">
+      {% csrf_token %}
+      <h1>User Info</h1>
+      {% if form.errors%}
+      {% for field, errors in form.errors.items %}
+      {% for error in errors %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>{{error}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endfor %}
+      {% endif %}
+
+
+
+
+      {%comment%}
+      <div class="col-md-6">
+        <label for="name" class="form-label">Name</label>
+        {{ form.name }}
+      </div>
+      <div class="col-md-6">
+        <label for="email" class="form-label">Email</label>
+        {{ form.email }}
+      </div>
+      <div class="col-md-12">
+        <label for="message" class="form-label">Message</label>
+        {{ form.message }}
+      </div>
+      {%endcomment%}
+
+      <div class="col-md-6">
+        <label for="can_contact" class="form-label">Can we contact your number?</label>
+        {{ form.can_contact }}
+      </div>
+      <div class="col-md-6">
+        <label for="age_range" class="form-label">Age Range</label>
+        {{ form.age_range }}
+      </div>
+      <div class="col-12">
+        {{ form.hidden_client_id }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+
+
+{% endblock %}
+

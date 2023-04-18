@@ -7,93 +7,215 @@
         <p class="lead text-muted">
         </p>
       </div>
-      <a href="{% url 'index' %}"> New Client </a>
+      {%comment%}<a href="{% url 'index' %}"> New Client </a>{%endcomment%}
     </div>
   </section>
 
   <div class="album py-5 bg-light">
     <div class="container">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="row">
+            <div class="col-md-6 offset-md-6 col-lg-4 offset-lg-8">
+            <form method="get" class="d-flex justify-content-end mb-3">
+        <div class="input-group">
+          <input type="text" name="query" class="form-control" placeholder="Search ph no...">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+            </div>
+
+      </div>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
         {% comment %} {% for employee in myEmployees %} {% endcomment %}
+        {% for client_phone in client_phones %}
         <div class="col">
           <div class="card shadow-sm">
             <div class="card-body">
               {% comment %} {% cycle 'bg-warning' 'bg-danger' 'bg-primary' 'bg-info' as bgcolor silent%} {% endcomment %}
-              <h5 class="card-title {{bgcolor}}">09901234567</h5>
-              <p class="card-text">{{employee.title}}</p>
+              <h5 class="card-title">{{ client_phone.phone_number }}</h5>
+              <p class="card-text">{{ client_phone.client.gender }}</p>
+              <p class="card-text">{{ client_phone.client.type }}</p>
+              <p class="card-text">{{ client_phone.client.age_range }}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
 
-                  <a href="#" type="button" class="btn btn-sm btn-outline-secondary">
-                    Update
+                  <a href="{% url 'client_details' client_phone.client.id %}" type="button" class="btn btn-sm btn-outline-secondary">
+                    View Details
                   </a>
                 </div>
-                <small class="text-muted">Male</small>
+                {% comment %}<small class="text-muted">{{ client_phone.client.gender }}</small>{% endcomment %}
               </div>
+            </div>
+            {% if client_phone.client.stage.id == 1 %}
+            <div class="card-footer text-bg-danger">
+            {% else %}
+            <div class="card-footer text-muted">
+            {% endif %}
+
+                {{ client_phone.client.stage }}
             </div>
           </div>
         </div>
-
+        {% endfor %}
         {% comment %} {% endfor %} {% endcomment %}
-        <div class="col">
-          <div class="card shadow-sm">
-            <div class="card-body">
-              {% comment %} {% cycle 'bg-warning' 'bg-danger' 'bg-primary' 'bg-info' as bgcolor silent%} {% endcomment %}
-              <h5 class="card-title {{bgcolor}}">09234567890</h5>
-              <p class="card-text">{{employee.title}}</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
+        <!--<div class="col">-->
+        <!--  <div class="card shadow-sm">-->
+        <!--    <div class="card-body">-->
+        <!--      {% comment %} {% cycle 'bg-warning' 'bg-danger' 'bg-primary' 'bg-info' as bgcolor silent%} {% endcomment %}-->
+        <!--      <h5 class="card-title {{bgcolor}}">09234567890</h5>-->
+        <!--      <p class="card-text">{{employee.title}}</p>-->
+        <!--      <div class="d-flex justify-content-between align-items-center">-->
+        <!--        <div class="btn-group">-->
 
-                  <a href="#" type="button" class="btn btn-sm btn-outline-secondary">
-                    Update
-                  </a>
-                </div>
-                <small class="text-muted">Female</small>
-              </div>
-            </div>
-          </div>
-        </div>
+        <!--          <a href="#" type="button" class="btn btn-sm btn-outline-secondary">-->
+        <!--            Update-->
+        <!--          </a>-->
+        <!--        </div>-->
+        <!--        <small class="text-muted">Female</small>-->
+        <!--      </div>-->
+        <!--    </div>-->
+        <!--  </div>-->
+        <!--</div>-->
 
-        <div class="col">
-          <div class="card shadow-sm">
-            <div class="card-body">
-              {% comment %} {% cycle 'bg-warning' 'bg-danger' 'bg-primary' 'bg-info' as bgcolor silent%} {% endcomment %}
-              <h5 class="card-title {{bgcolor}}">095678901</h5>
-              <p class="card-text">{{employee.title}}</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
+        <!--<div class="col">-->
+        <!--  <div class="card shadow-sm">-->
+        <!--    <div class="card-body">-->
+        <!--      {% comment %} {% cycle 'bg-warning' 'bg-danger' 'bg-primary' 'bg-info' as bgcolor silent%} {% endcomment %}-->
+        <!--      <h5 class="card-title {{bgcolor}}">095678901</h5>-->
+        <!--      <p class="card-text">{{employee.title}}</p>-->
+        <!--      <div class="d-flex justify-content-between align-items-center">-->
+        <!--        <div class="btn-group">-->
 
-                  <a href="#" type="button" class="btn btn-sm btn-outline-secondary">
-                    Update
-                  </a>
-                </div>
-                <small class="text-muted">Male</small>
-              </div>
-            </div>
-          </div>
-        </div>
+        <!--          <a href="#" type="button" class="btn btn-sm btn-outline-secondary">-->
+        <!--            Update-->
+        <!--          </a>-->
+        <!--        </div>-->
+        <!--        <small class="text-muted">Male</small>-->
+        <!--      </div>-->
+        <!--    </div>-->
+        <!--  </div>-->
+        <!--</div>-->
 
-        <div class="col">
-          <div class="card shadow-sm">
-            <div class="card-body">
-              {% comment %} {% cycle 'bg-warning' 'bg-danger' 'bg-primary' 'bg-info' as bgcolor silent%} {% endcomment %}
-              <h5 class="card-title {{bgcolor}}">09456789012</h5>
-              <p class="card-text">{{employee.title}}</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
+        <!--<div class="col">-->
+        <!--  <div class="card shadow-sm">-->
+        <!--    <div class="card-body">-->
+        <!--      {% comment %} {% cycle 'bg-warning' 'bg-danger' 'bg-primary' 'bg-info' as bgcolor silent%} {% endcomment %}-->
+        <!--      <h5 class="card-title {{bgcolor}}">09456789012</h5>-->
+        <!--      <p class="card-text">{{employee.title}}</p>-->
+        <!--      <div class="d-flex justify-content-between align-items-center">-->
+        <!--        <div class="btn-group">-->
 
-                  <a href="#" type="button" class="btn btn-sm btn-outline-secondary">
-                    Update
-                  </a>
-                </div>
-                <small class="text-muted">Female</small>
-              </div>
-            </div>
-          </div>
-        </div>
+        <!--          <a href="#" type="button" class="btn btn-sm btn-outline-secondary">-->
+        <!--            Update-->
+        <!--          </a>-->
+        <!--        </div>-->
+        <!--        <small class="text-muted">Female</small>-->
+        <!--      </div>-->
+        <!--    </div>-->
+        <!--  </div>-->
+        <!--</div>-->
 
       </div>
     </div>
+
+{% comment %}
+    <div class="container">
+  <div class="row">
+    <div class="col-lg-9">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+        {% for client_phone in client_phones %}
+        <div class="col">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">{{ client_phone.phone_number }}</h5>
+              <p class="card-text">{{ client_phone.client.type }}</p>
+              <p class="card-text">{{ client_phone.client.age_range }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a href="#" type="button" class="btn btn-sm btn-outline-secondary">
+                    Update
+                  </a>
+                </div>
+                <small class="text-muted">{{ client_phone.client.gender }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <form method="get" class="d-flex justify-content-end mb-3">
+        <div class="input-group">
+          <input type="text" name="query" class="form-control" placeholder="Search...">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
   </div>
+</div>
+{% endcomment %}
+  </div>
+
+{% comment %}
+  <div class="container my-5">
+  <div class="row">
+    <div class="col-md-4">
+      <form method="get">
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+    </div>
+    <div class="col-md-8">
+      <div class="row">
+        {% for client_phone in client_phones %}
+        <div class="col-md-4">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">{{ client_phone.phone_number }}</h5>
+              <p class="card-text">{{ client_phone.client.type }}</p>
+              <p class="card-text">{{ client_phone.client.gender }}</p>
+              <p class="card-text">{{ client_phone.client.age_range }}</p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="container my-5">
+  <div class="row">
+    <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+
+      <form method="get" class="d-flex justify-content-end mb-3">
+        <div class="input-group">
+          <input type="text" name="query" class="form-control" placeholder="Search...">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+
+      <div class="row">
+        {% for client_phone in client_phones %}
+        <div class="col-md-4">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">{{ client_phone.phone_number }}</h5>
+              <p class="card-text">{{ client_phone.client.type }}</p>
+              <p class="card-text">{{ client_phone.client.gender }}</p>
+              <p class="card-text">{{ client_phone.client.age_range }}</p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endcomment %}
+
+
 </main>
 {% endblock %}
