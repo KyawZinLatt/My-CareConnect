@@ -5,6 +5,15 @@ from django.forms.widgets import TextInput, Textarea
 from callcenter.models import TxRegime, ClientTBTreatment, ClientTBConfirmation, ClientInvestigatedResult, InvestigationResult, InvestigationType, ClientReachInfo, ClientPhone, StateRegion, Township, Client, TBReferralClient, SymptomQuestion, ClientSymptomQuestionAnswer, Stage, ClientTBReferral, SocialPlatform, ClientSocialPlatform, ClientRefRegLocation, SiteLocation
 #from django_bootstrap5.widgets import BootstrapTextInput, BootstrapTextarea
 
+
+class StageFilterForm(forms.Form):
+    stage = forms.ModelChoiceField(
+        queryset=Stage.objects.all(),
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
+
 class SearchForm(forms.Form):
     query = forms.CharField(max_length=100)
 

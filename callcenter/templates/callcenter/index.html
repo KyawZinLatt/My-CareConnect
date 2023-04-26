@@ -12,8 +12,17 @@
 
   <div class="album py-5 bg-light">
     <div class="container">
+      
       <div class="row">
-        <div class="col-md-6 offset-md-6 col-lg-4 offset-lg-8">
+        <div class="col-md-6 col-lg-5">
+          <form method="get" class="mb-3">
+            <div class="input-group">
+            {{ stage_filter_form.stage.label_tag }} {{ stage_filter_form.stage }}
+            <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-6 col-lg-5 offset-lg-2">
           <form method="get" class="d-flex justify-content-end mb-3">
             <div class="input-group">
               <input type="text" name="query" class="form-control" placeholder="Search ph no...">
@@ -22,6 +31,25 @@
           </form>
         </div>
       </div>
+      
+      {% comment %}<div class="row">
+        <div class="col-md-6 col-lg-5">
+          <form method="get" class="mb-3">
+            <div class="input-group">
+            {{ stage_filter_form.stage.label_tag }} {{ stage_filter_form.stage }}
+            <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-6 col-lg-5 offset-lg-2">
+          <form method="get" class="d-flex justify-content-end mb-3">
+            <div class="input-group">
+              <input type="text" name="query" class="form-control" placeholder="Search ph no...">
+              <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+          </form>
+        </div>
+      </div>{% endcomment %}
       <div class="row">
         <div class="col-12">
           <table class="table table-striped">
@@ -42,20 +70,15 @@
                 <td>{{ client_phone.client.gender }}</td>
                 <td>{{ client_phone.client.type }}</td>
                 <td>{{ client_phone.client.age_range }}</td>
+                <td>{{ client_phone.client.stage }}</td>
                 <td>
-                  {% if client_phone.client.stage.id == 1 %}
-                  <span class="text-danger">
-                  {% else %}
-                  <span class="text-muted">
-                  {% endif %}
-                    {{ client_phone.client.stage }}
-                  </span>
+                  <a href="#" class="btn btn-primary">Edit</a>
+                  <a href="#" class="btn btn-danger">Delete</a>
                 </td>
-                <td>
-                  <a href="{% url 'client_details' client_phone.client.id %}" type="button" class="btn btn-sm btn-outline-secondary">
-                    View Details
-                  </a>
-                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="6" class="text-center">No records found</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -66,3 +89,4 @@
   </div>
 </main>
 {% endblock %}
+

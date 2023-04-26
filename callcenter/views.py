@@ -9,19 +9,43 @@ from django.views.generic.base import TemplateView
 from rest_framework import generics
 #from rest_framework.response import Response
 from django.contrib.auth import authenticate, login
-from callcenter.forms import TBTreatmentForm, TBConfirmationForm, InvestigationForm, ReachInfoForm, AdditionalPhoneForm ,ReferLocationForm, SearchForm, FirstContactForm, SymptomByCallChildForm, SymptomByCallAdultForm, TBReferralForm, ActiveSocialPlatformsForm
+from callcenter.forms import StageFilterForm, TBTreatmentForm, TBConfirmationForm, InvestigationForm, ReachInfoForm, AdditionalPhoneForm ,ReferLocationForm, SearchForm, FirstContactForm, SymptomByCallChildForm, SymptomByCallAdultForm, TBReferralForm, ActiveSocialPlatformsForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import requests, json
 
 @login_required
+# def index(request):
+#     form = SearchForm(request.GET)
+#     client_phones = ClientPhone.objects.filter(phone_type__iexact="1").order_by('client__stage','modified_datetime')
+#     if form.is_valid():
+#         query = form.cleaned_data['query']
+#         client_phones = ClientPhone.objects.filter(phone_type__iexact="1", phone_number__icontains=query).order_by('client__stage','modified_datetime')
+#     return render(request, 'callcenter/index.html', {'client_phones': client_phones, 'form': form})
 def index(request):
-    form = SearchForm(request.GET)
-    client_phones = ClientPhone.objects.filter(phone_type__iexact="1").order_by('client__stage','modified_datetime')
-    if form.is_valid():
-        query = form.cleaned_data['query']
-        client_phones = ClientPhone.objects.filter(phone_type__iexact="1", phone_number__icontains=query).order_by('client__stage','modified_datetime')
-    return render(request, 'callcenter/index.html', {'client_phones': client_phones, 'form': form})
+    stage_filter_form = StageFilterForm(request.GET)
+    client_phones = ClientPhone.objects.all()
+
+    if stage_filter_form.is_valid():
+        stage = stage_filter_form.cleaned_data.get('stage')
+        if stage:
+            client_phones = client_phones.filter(client__stage=stage)
+
+    query = request.GET.get('query')
+    if query:
+        client_phones = client_phones.filter(phone_number__icontains=query)
+
+    context = {
+        'client_phones': client_phones,
+        'stage_filter_form': stage_filter_form
+    }
+
+    return render(request, 'callcenter/index.html', context)
+
+
+
+
+
 # def index(request):
 #     if request.user.is_authenticated:
 #         context = {
