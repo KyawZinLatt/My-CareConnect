@@ -10,6 +10,7 @@ class StageFilterForm(forms.Form):
     stage = forms.ModelChoiceField(
         queryset=Stage.objects.all(),
         required=False,
+        empty_label="Select the stage",
         widget=forms.Select(attrs={'class': 'form-select'})
     )
 
