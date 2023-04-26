@@ -141,9 +141,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # default static files settings for PythonAnywhere.
 # see https://help.pythonanywhere.com/pages/DjangoStaticFiles for more info
-MEDIA_ROOT = '/home/psiehealth/careconnect/media'
+MEDIA_ROOT = '/home/kyawzinlattpsi/careconnect/media'
 MEDIA_URL = '/media/'
-STATIC_ROOT = '/home/psiehealth/careconnect/static'
+STATIC_ROOT = '/home/kyawzinlattpsi/careconnect/static'
 STATIC_URL = '/static/'
 
 LOGIN_URL = '/login/'
