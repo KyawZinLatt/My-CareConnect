@@ -1,3 +1,5 @@
+from django.core.paginator import Paginator
+from django.db.models import F
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from rest_framework import viewsets
@@ -13,6 +15,7 @@ from callcenter.forms import StageFilterForm, TBTreatmentForm, TBConfirmationFor
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import requests, json
+from django.db.models import Q
 
 @login_required
 # def index(request):
@@ -24,23 +27,35 @@ import requests, json
 #     return render(request, 'callcenter/index.html', {'client_phones': client_phones, 'form': form})
 def index(request):
     stage_filter_form = StageFilterForm(request.GET)
-    client_phones = ClientPhone.objects.all()
+    query = request.GET.get('query', '')
+
+    filter_conditions = Q()
 
     if stage_filter_form.is_valid():
         stage = stage_filter_form.cleaned_data.get('stage')
         if stage:
-            client_phones = client_phones.filter(client__stage=stage)
+            filter_conditions &= Q(client__stage=stage)
 
-    query = request.GET.get('query')
     if query:
-        client_phones = client_phones.filter(phone_number__icontains=query)
+        filter_conditions &= Q(phone_number__icontains=query)
+
+    client_phones = ClientPhone.objects.select_related('client').filter(filter_conditions).order_by('phone_number')
+
+    # Pagination
+    paginator = Paginator(client_phones, 10)  # Show 10 clients per page
+    page = request.GET.get('page')
+    clients_page = paginator.get_page(page)
 
     context = {
-        'client_phones': client_phones,
-        'stage_filter_form': stage_filter_form
+        'client_phones': clients_page,
+        'stage_filter_form': stage_filter_form,
     }
 
     return render(request, 'callcenter/index.html', context)
+
+
+
+
 
 
 
