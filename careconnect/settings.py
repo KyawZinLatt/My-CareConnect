@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-_lquw7cfhj8)f+i#^(-kf2$1v$zc5v^9o$#7hl=zs#bj%-q2xq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['psiehealth.pythonanywhere.com']
+ALLOWED_HOSTS = ['psiehealth.pythonanywhere.com','kyawzinlattpsi.pythonanywhere.com']
 
 
 # Application definition
