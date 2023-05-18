@@ -87,72 +87,109 @@ class FirstContactForm(forms.Form):
     #     return message
 
 
-class SymptomByCallAdultForm(forms.Form):
+# class SymptomByCallAdultForm(forms.Form):
 
-    adult_symptom_questions = SymptomQuestion.objects.filter(is_active=True,type='a')
+#     adult_symptom_questions = SymptomQuestion.objects.filter(is_active=True,type='a')
 
-    question1 = forms.ChoiceField(label=adult_symptom_questions[0].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
-    question2 = forms.ChoiceField(label=adult_symptom_questions[1].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
-    question3 = forms.ChoiceField(label=adult_symptom_questions[2].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
-    question4 = forms.ChoiceField(label=adult_symptom_questions[3].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
-    question5 = forms.ChoiceField(label=adult_symptom_questions[4].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
-    question6 = forms.ChoiceField(label=adult_symptom_questions[5].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
-    question7 = forms.ChoiceField(label=adult_symptom_questions[6].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
-    question8 = forms.ChoiceField(label=adult_symptom_questions[7].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
+#     question1 = forms.ChoiceField(label=adult_symptom_questions[0].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
+#     question2 = forms.ChoiceField(label=adult_symptom_questions[1].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
+#     question3 = forms.ChoiceField(label=adult_symptom_questions[2].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
+#     question4 = forms.ChoiceField(label=adult_symptom_questions[3].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
+#     question5 = forms.ChoiceField(label=adult_symptom_questions[4].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
+#     question6 = forms.ChoiceField(label=adult_symptom_questions[5].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
+#     question7 = forms.ChoiceField(label=adult_symptom_questions[6].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
+#     question8 = forms.ChoiceField(label=adult_symptom_questions[7].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
 
 
+
+#     def save(self, client=None):
+#         adult_symptom_questions = SymptomQuestion.objects.filter(is_active=True,type='a')
+#         stage = Stage.objects.get(id=2)
+#         questions_answers = []
+#         for i in range(1, 9):
+#             client_question_answer = ClientSymptomQuestionAnswer(
+#                 answer = self.cleaned_data[f'question{i}'],
+#                 question = adult_symptom_questions[i-1],
+#                 stage = stage,
+#                 client = client
+#                 )
+#             questions_answers.append(client_question_answer)
+#         ClientSymptomQuestionAnswer.objects.bulk_create(questions_answers)
+#         client_data = {
+#             'stage': stage
+#             }
+#         if client:
+#             for field, value in client_data.items():
+#                 setattr(client, field, value)
+#             client.save()
+
+
+# class SymptomByCallChildForm(forms.Form):
+
+#     child_symptom_questions = SymptomQuestion.objects.filter(is_active=True,type='c')
+
+#     question1 = forms.ChoiceField(label=child_symptom_questions[0].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
+#     question2 = forms.ChoiceField(label=child_symptom_questions[1].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
+#     question3 = forms.ChoiceField(label=child_symptom_questions[2].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
+
+
+#     def save(self, client=None):
+#         child_symptom_questions = SymptomQuestion.objects.filter(is_active=True,type='c')
+#         stage = Stage.objects.get(id=2)
+#         questions_answers = []
+#         for i in range(1, 4):
+#             client_question_answer = ClientSymptomQuestionAnswer(
+#                 answer = self.cleaned_data[f'question{i}'],
+#                 question = child_symptom_questions[i-1],
+#                 stage = stage,
+#                 client = client
+#                 )
+#             questions_answers.append(client_question_answer)
+#         ClientSymptomQuestionAnswer.objects.bulk_create(questions_answers)
+#         client_data = {
+#             'stage': stage
+#             }
+#         if client:
+#             for field, value in client_data.items():
+#                 setattr(client, field, value)
+#             client.save()
+
+
+class SymptomByCallForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.age_range = kwargs.pop('age_range', None)  # use self.age_range
+        super(SymptomByCallForm, self).__init__(*args, **kwargs)
+
+        symptom_questions = SymptomQuestion.objects.filter(is_active=True, type=self.age_range)  # use self.age_range
+        for i, question in enumerate(symptom_questions):
+            self.fields[f'question{i+1}'] = forms.ChoiceField(label=question.description,
+                                                              choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')),
+                                                              required=True,
+                                                              widget=forms.Select(attrs={'class': 'form-control'}))
 
     def save(self, client=None):
-        adult_symptom_questions = SymptomQuestion.objects.filter(is_active=True,type='a')
+        symptom_questions = SymptomQuestion.objects.filter(is_active=True, type=self.age_range)  # use self.age_range
         stage = Stage.objects.get(id=2)
         questions_answers = []
-        for i in range(1, 9):
+
+        for i, question in enumerate(symptom_questions):
             client_question_answer = ClientSymptomQuestionAnswer(
-                answer = self.cleaned_data[f'question{i}'],
-                question = adult_symptom_questions[i-1],
-                stage = stage,
-                client = client
-                )
+                answer=self.cleaned_data[f'question{i+1}'],
+                question=question,
+                stage=stage,
+                client=client
+            )
             questions_answers.append(client_question_answer)
+
         ClientSymptomQuestionAnswer.objects.bulk_create(questions_answers)
         client_data = {
             'stage': stage
-            }
+        }
         if client:
             for field, value in client_data.items():
                 setattr(client, field, value)
             client.save()
 
-
-class SymptomByCallChildForm(forms.Form):
-
-    child_symptom_questions = SymptomQuestion.objects.filter(is_active=True,type='c')
-
-    question1 = forms.ChoiceField(label=child_symptom_questions[0].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
-    question2 = forms.ChoiceField(label=child_symptom_questions[1].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
-    question3 = forms.ChoiceField(label=child_symptom_questions[2].description,choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
-
-
-    def save(self, client=None):
-        child_symptom_questions = SymptomQuestion.objects.filter(is_active=True,type='c')
-        stage = Stage.objects.get(id=2)
-        questions_answers = []
-        for i in range(1, 4):
-            client_question_answer = ClientSymptomQuestionAnswer(
-                answer = self.cleaned_data[f'question{i}'],
-                question = child_symptom_questions[i-1],
-                stage = stage,
-                client = client
-                )
-            questions_answers.append(client_question_answer)
-        ClientSymptomQuestionAnswer.objects.bulk_create(questions_answers)
-        client_data = {
-            'stage': stage
-            }
-        if client:
-            for field, value in client_data.items():
-                setattr(client, field, value)
-            client.save()
 
 
 class TBReferralForm(forms.Form):

@@ -167,7 +167,7 @@
                             <!--</div>-->
                         {% comment %}{% endif %}{% endcomment %}
                         {% comment %}{% if client_call_symptoms_questions_answers %}{% endcomment %}
-                            <div class="card mb-4">
+                            <div class="card mb-4" id="symptomsCard">
                                 <div class="card-header">Symptoms confirmed by call</div>
                                 <div class="card-body">
                                     {% for client_call_symptom_question_answer in client_call_symptoms_questions_answers %}
@@ -181,9 +181,12 @@
                                         </div>
                                         <hr>
                                     {% endfor %}
-                                        <div class="row">
+                                        <div class="row last-row">
                                             <div class="col-sm-7">
-                                                <a class="btn btn-info" href="{% url 'client_call_symptoms' id=client.id %}">Add</a>
+                                                <!--<a class="btn btn-info" href="{% url 'client_call_symptoms' id=client.id %}">Add</a>-->
+                                                <button type="button" id="symptomsModalButton" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#symptomsModal" {% if client_call_symptoms_questions_answers %}disabled{% endif %}>
+                                                    Add
+                                                </button>
                                             </div>
                                             <div class="col-sm-5"></div>
                                         </div>
@@ -570,6 +573,7 @@
         </section>
         {% include 'callcenter/add_user_info_modal_form.html' %}
         {% include 'callcenter/add_phone_modal_form.html' %}
+        {% include 'callcenter/add_symptoms_by_call.html' %}
     </main>
 {% endblock %}
 {% block js  %}

@@ -11,7 +11,7 @@ from django.views.generic.base import TemplateView
 from rest_framework import generics
 #from rest_framework.response import Response
 from django.contrib.auth import authenticate, login
-from callcenter.forms import StageFilterForm, TBTreatmentForm, TBConfirmationForm, InvestigationForm, ReachInfoForm, AdditionalPhoneForm ,ReferLocationForm, SearchForm, FirstContactForm, SymptomByCallChildForm, SymptomByCallAdultForm, TBReferralForm, ActiveSocialPlatformsForm
+from callcenter.forms import SymptomByCallForm, StageFilterForm, TBTreatmentForm, TBConfirmationForm, InvestigationForm, ReachInfoForm, AdditionalPhoneForm ,ReferLocationForm, SearchForm, FirstContactForm, TBReferralForm, ActiveSocialPlatformsForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import requests, json
@@ -363,71 +363,92 @@ def first_contact(request, id):
         print("Exception occurred:", e)
         return JsonResponse({'success': False, 'error_message': 'An error occurred on the server.'}, status=500)
 
+# @login_required
+# def symptoms_confirmed_by_call(request, id):
+#     client = get_object_or_404(Client, id=id)
+#     tb_referral_client = client.tbreferralclient_set.all()
+
+
+#     if tb_referral_client.first().age_range == "BelowFifteen":
+#         if request.method == 'POST':
+#             form = SymptomByCallChildForm(request.POST)
+#             if form.is_valid():
+#                 # Process form data
+#                 # name = form.cleaned_data['name']
+#                 # email = form.cleaned_data['email']
+#                 # message = form.cleaned_data['message']
+#                 # can_contact = form.cleaned_data['can_contact']
+#                 # age_range = form.cleaned_data['age_range']
+#                 # hidden_client_id = form.cleaned_data['hidden_client_id']
+
+#                 print(form.cleaned_data['question1'])
+#                 print(form.cleaned_data['question2'])
+#                 print(form.cleaned_data['question3'])
+
+#                 form.save(client=client)
+#                 # Do something with the form data
+#                 # ...
+#                 # Redirect to success page
+#                 return redirect('client_details', id=id)
+#             else:
+#                 print(form.errors)
+#         else:
+#             #initial_values = {'hidden_client_id': id}
+#             #form = FirstContactForm(initial=initial_values)
+#             form = SymptomByCallChildForm()
+
+#         return render(request, 'callcenter/client_symptoms_by_call_child.html', {'form': form})
+#     else:
+#         if request.method == 'POST':
+#             form = SymptomByCallAdultForm(request.POST)
+#             if form.is_valid():
+#                 # Process form data
+#                 # name = form.cleaned_data['name']
+#                 # email = form.cleaned_data['email']
+#                 # message = form.cleaned_data['message']
+#                 # can_contact = form.cleaned_data['can_contact']
+#                 # age_range = form.cleaned_data['age_range']
+#                 # hidden_client_id = form.cleaned_data['hidden_client_id']
+
+#                 # print(can_contact)
+#                 # print(age_range)
+#                 # print(hidden_client_id)
+
+#                 form.save(client=client)
+#                 # Do something with the form data
+#                 # ...
+#                 # Redirect to success page
+#                 return redirect('client_details', id=id)
+#             else:
+#                 print(form.errors)
+#         else:
+#             #initial_values = {'hidden_client_id': id}
+#             #form = FirstContactForm(initial=initial_values)
+#             form = SymptomByCallAdultForm()
+
+#         return render(request, 'callcenter/client_symptoms_by_call_adult.html', {'form': form})
+
 @login_required
 def symptoms_confirmed_by_call(request, id):
     client = get_object_or_404(Client, id=id)
     tb_referral_client = client.tbreferralclient_set.all()
 
+    age_range = 'a' if tb_referral_client.first().age_range != "BelowFifteen" else 'c'
 
-    if tb_referral_client.first().age_range == "BelowFifteen":
-        if request.method == 'POST':
-            form = SymptomByCallChildForm(request.POST)
-            if form.is_valid():
-                # Process form data
-                # name = form.cleaned_data['name']
-                # email = form.cleaned_data['email']
-                # message = form.cleaned_data['message']
-                # can_contact = form.cleaned_data['can_contact']
-                # age_range = form.cleaned_data['age_range']
-                # hidden_client_id = form.cleaned_data['hidden_client_id']
-
-                print(form.cleaned_data['question1'])
-                print(form.cleaned_data['question2'])
-                print(form.cleaned_data['question3'])
-
-                form.save(client=client)
-                # Do something with the form data
-                # ...
-                # Redirect to success page
-                return redirect('client_details', id=id)
-            else:
-                print(form.errors)
+    if request.method == 'POST':
+        form = SymptomByCallForm(request.POST, age_range=age_range)
+        if form.is_valid():
+            form.save(client=client)
+            # return a JSON response with success status and any other details needed
+            return JsonResponse({"success": True})
         else:
-            #initial_values = {'hidden_client_id': id}
-            #form = FirstContactForm(initial=initial_values)
-            form = SymptomByCallChildForm()
-
-        return render(request, 'callcenter/client_symptoms_by_call_child.html', {'form': form})
+            # return the form errors
+            return JsonResponse({"success": False, "errors": form.errors})
     else:
-        if request.method == 'POST':
-            form = SymptomByCallAdultForm(request.POST)
-            if form.is_valid():
-                # Process form data
-                # name = form.cleaned_data['name']
-                # email = form.cleaned_data['email']
-                # message = form.cleaned_data['message']
-                # can_contact = form.cleaned_data['can_contact']
-                # age_range = form.cleaned_data['age_range']
-                # hidden_client_id = form.cleaned_data['hidden_client_id']
+        form = SymptomByCallForm(age_range=age_range)
 
-                # print(can_contact)
-                # print(age_range)
-                # print(hidden_client_id)
-
-                form.save(client=client)
-                # Do something with the form data
-                # ...
-                # Redirect to success page
-                return redirect('client_details', id=id)
-            else:
-                print(form.errors)
-        else:
-            #initial_values = {'hidden_client_id': id}
-            #form = FirstContactForm(initial=initial_values)
-            form = SymptomByCallAdultForm()
-
-        return render(request, 'callcenter/client_symptoms_by_call_adult.html', {'form': form})
-
+    # if not a POST request, return a default response (you can modify this as needed)
+    return JsonResponse({"message": "Invalid request method"})
 
 @login_required
 def refer_tb_client(request, id):
