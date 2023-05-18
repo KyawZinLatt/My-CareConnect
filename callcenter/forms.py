@@ -30,7 +30,7 @@ class FirstContactForm(forms.Form):
     # name = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     # email = forms.EmailField(max_length=100, required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))
     # message = forms.CharField(required=True, widget=forms.Textarea(attrs={'class': 'form-control'}))
-    hidden_client_id = forms.CharField(widget=forms.HiddenInput)
+    #hidden_client_id = forms.CharField(widget=forms.HiddenInput)
     can_contact = forms.ChoiceField(choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
     age_range = forms.ChoiceField(choices=AGE_RANGE_CHOICE, required=True, widget=forms.Select(attrs={'class': 'form-control'}))
 
@@ -508,7 +508,7 @@ class AdditionalPhoneForm(forms.Form):
         required=True,
         max_length=13,
         validators=[RegexValidator(
-            regex='^\+\d{11,13}$',
+            regex='^\+\d{10,13}$',
             message='Enter a valid phone number (format: +959...)'
         )],
         widget=forms.TextInput(attrs={'type': 'tel', 'class': 'form-control', 'placeholder': '+959...'})
@@ -521,7 +521,7 @@ class AdditionalPhoneForm(forms.Form):
             'client': client,
             'phone_type': '2',
             }
-        ClientPhone.objects.create(**client_additional_ph_data)
+        return ClientPhone.objects.create(**client_additional_ph_data)
 
 
 

@@ -300,40 +300,68 @@ def client_edit(request,id):
         }
     return render(request, 'callcenter/client_edit.html', context)
 
+# @login_required
+# def first_contact(request, id):
+#     client = get_object_or_404(Client, id=id)
+#     client_phone = client.clientphone_set.get(phone_type='1')
+
+#     if request.method == 'POST':
+#         form = FirstContactForm(request.POST)
+#         if form.is_valid():
+#             # Process form data
+#             # name = form.cleaned_data['name']
+#             # email = form.cleaned_data['email']
+#             # message = form.cleaned_data['message']
+#             can_contact = form.cleaned_data['can_contact']
+#             age_range = form.cleaned_data['age_range']
+#             hidden_client_id = form.cleaned_data['hidden_client_id']
+
+#             print(can_contact)
+#             print(age_range)
+#             print(hidden_client_id)
+
+#             form.save(id=client.id,client_phone=client_phone)
+#             # Do something with the form data
+#             # ...
+#             # Redirect to success page
+#             return redirect('client_details', id=id)
+#         else:
+#             print(form.errors)
+#     else:
+#         initial_values = {'hidden_client_id': id}
+#         form = FirstContactForm(initial=initial_values)
+
+#     return render(request, 'callcenter/client_first_contact.html', {'form': form})
+
 @login_required
 def first_contact(request, id):
-    client = get_object_or_404(Client, id=id)
-    client_phone = client.clientphone_set.get(phone_type='1')
+    try:
+        client = get_object_or_404(Client, id=id)
+        client_phone = client.clientphone_set.get(phone_type='1')
 
-    if request.method == 'POST':
-        form = FirstContactForm(request.POST)
-        if form.is_valid():
-            # Process form data
-            # name = form.cleaned_data['name']
-            # email = form.cleaned_data['email']
-            # message = form.cleaned_data['message']
-            can_contact = form.cleaned_data['can_contact']
-            age_range = form.cleaned_data['age_range']
-            hidden_client_id = form.cleaned_data['hidden_client_id']
+        if request.method == 'POST':
+            print(request.POST)
+            form = FirstContactForm(request.POST)
+            if form.is_valid():
+                can_contact = form.cleaned_data['can_contact']
+                age_range = form.cleaned_data['age_range']
 
-            print(can_contact)
-            print(age_range)
-            print(hidden_client_id)
+                form.save(id=client.id, client_phone=client_phone)
 
-            form.save(id=client.id,client_phone=client_phone)
-            # Do something with the form data
-            # ...
-            # Redirect to success page
-            return redirect('client_details', id=id)
+                # Log the form data
+                print("Form data:", request.POST)
+
+                return JsonResponse({'success': True, 'user_info': {'can_be_contacted': can_contact, 'age_range': age_range}})
+            else:
+                # Log the form errors
+                print("Form errors:", form.errors)
+                return JsonResponse({'success': False, 'error_message': 'Please check the form inputs.'}, status=400)
         else:
-            print(form.errors)
-    else:
-        initial_values = {'hidden_client_id': id}
-        form = FirstContactForm(initial=initial_values)
-
-    return render(request, 'callcenter/client_first_contact.html', {'form': form})
-
-
+            return JsonResponse({'success': False, 'error_message': 'Invalid request method.'}, status=400)
+    except Exception as e:
+        # Log any exceptions
+        print("Exception occurred:", e)
+        return JsonResponse({'success': False, 'error_message': 'An error occurred on the server.'}, status=500)
 
 @login_required
 def symptoms_confirmed_by_call(request, id):
@@ -572,23 +600,44 @@ def load_clinic(request):
     site_location = SiteLocation.objects.filter(id=site_location_id)
     return JsonResponse(list(site_location.values('id', 'clinic_name', 'clinic_name_mm', 'channel__name', 'organization__name')),safe=False)
 
+# @login_required
+# def add_additional_ph(request, id):
+
+#     client = get_object_or_404(Client, id=id)
+
+#     if request.method == 'POST':
+#         form = AdditionalPhoneForm(request.POST)
+#         if form.is_valid():
+
+#             form.save(client=client)
+
+#             # Redirect to the success page
+#             return redirect('client_details', id=id)
+#     else:
+#         form = AdditionalPhoneForm()
+
+#     return render(request, 'callcenter/client_additional_ph.html', {'form': form})
+
 @login_required
 def add_additional_ph(request, id):
 
     client = get_object_or_404(Client, id=id)
 
     if request.method == 'POST':
+        print(request.POST)
         form = AdditionalPhoneForm(request.POST)
         if form.is_valid():
-
-            form.save(client=client)
-
-            # Redirect to the success page
-            return redirect('client_details', id=id)
+            new_phone = form.save(client=client)
+            print("Form is valid and data has been saved.")
+            return JsonResponse({'success': True, 'new_phone': new_phone.phone_number})
+        else:
+            # manually construct error message without field name
+            error_message = ""
+            for field in form.errors:
+                error_message += form.errors[field][0]
+            return JsonResponse({'success': False, "error_message": error_message})
     else:
-        form = AdditionalPhoneForm()
-
-    return render(request, 'callcenter/client_additional_ph.html', {'form': form})
+        return JsonResponse({"error": "Invalid request"})
 
 
 @login_required

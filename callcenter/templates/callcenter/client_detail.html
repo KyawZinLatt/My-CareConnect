@@ -1,766 +1,577 @@
 {% extends 'main.html' %}
 {% load static %}
-{% block css %}
-<!--body{-->
-<!--    margin-top:20px;-->
-<!--    color: #1a202c;-->
-<!--    text-align: left;-->
-<!--    background-color: #e2e8f0;-->
-<!--}-->
-<!--.main-body {-->
-<!--    padding: 15px;-->
-<!--}-->
-<!--.card {-->
-<!--    box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);-->
-<!--}-->
+{% block css %}{% endblock %}
+{% block content %}
+    <main>
+        <section style="background-color: #eee;">
+            <div class="container py-5">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card mb-4">
+                            <div class="card-body text-center">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                                     alt="avatar"
+                                     class="rounded-circle img-fluid"
+                                     style="width: 150px">
+                                <div class="row">
+                                    <div class="col-6 text-end">
+                                        <h5 class="my-3">Primary Phone :</h5>
+                                    </div>
+                                    <div class="col-6 text-start">
+                                        <h5 class="my-3">{{ client_primary_phone.phone_number }}</h5>
+                                    </div>
+                                </div>
+                                <div id="additionalPhoneNumbers">
+                                    {% if client_additional_phone %}
+                                        {% for each_phone in client_additional_phone %}
+                                            <div class="row">
+                                                <div class="col-6 text-end">
+                                                    <p class="mb-1">
+                                                        <strong>Additional Phone {{ forloop.counter }} :</strong>
+                                                    </p>
+                                                </div>
+                                                <div class="col-6 text-start">
+                                                    <p class="text-muted mb-1">{{ each_phone.phone_number }}</p>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-6 text-end">
+                                        <p class="mb-1">
+                                            <strong>Client Type :</strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-6 text-start">
+                                        <p class="text-muted mb-1">{{ client.type }}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 text-end">
+                                        <p class="mb-1">
+                                            <strong>Gender :</strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-6 text-start">
+                                        <p class="text-muted mb-1">{{ client.gender }}</p>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-6 text-end">
+                                        <p class="mb-1">
+                                            <strong>Age Range :</strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-6 text-start">
+                                        <p class="text-muted mb-1">{{ client.age_range }}</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mb-2">
+                                    <!--<button type="button" class="btn btn-primary">Update</button>-->
+                                    <!--<div class="btn-group">-->
+                                    <!--    <a href="" type="button" class="btn btn-sm btn-outline-secondary">-->
+                                    <!--      View Details-->
+                                    <!--    </a>-->
+                                    <!--  </div>-->
+                                    {% comment %}<a href="{% url 'client_additional_phone' id=client.id %}"
+                                       class="btn btn-primary">Add Phone</a>{% endcomment %}
+                                    <!-- Button trigger modal -->
+                                    <button type="button"
+                                            class="btn btn-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#phoneNumberModal">Add Phone Number</button>
+                                    <!--<button type="button" class="btn btn-outline-primary ms-1">Message</button>-->
+                                </div>
+                            </div>
+                            <div class="card-footer">{{ client.stage_id }} {{ client.stage.description }}</div>
+                        </div>
+                        {% if call_attempts %}
+                            <div class="card mb-4 mb-lg-0">
+                                <div class="card-header">Call Logs</div>
+                                <div class="card-body p-0">
+                                    <ul class="list-group list-group-flush rounded-3">
+                                        {% for call_attempt in call_attempts %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                                <i class="fas fa-globe fa-lg text-warning"></i>
+                                                <p class="mb-0">{{ call_attempt.current_attempt_date | date:'l, F jS Y' }}</p>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="card mb-4">
+                            <div class="card-header">Symptoms from Chatbot</div>
+                            <div class="card-body">
+                                {% for client_chatbot_symptom_question_answer in client_chatbot_symptoms_questions_answers %}
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <p class="mb-0">{{ client_chatbot_symptom_question_answer.question.description }}</p>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <p class="text-muted mb-0">{{ client_chatbot_symptom_question_answer.answer }}</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% comment %}{% if tb_referral_client %}{% endcomment %}
 
-<!--.card {-->
-<!--    position: relative;-->
-<!--    display: flex;-->
-<!--    flex-direction: column;-->
-<!--    min-width: 0;-->
-<!--    word-wrap: break-word;-->
-<!--    background-color: #fff;-->
-<!--    background-clip: border-box;-->
-<!--    border: 0 solid rgba(0,0,0,.125);-->
-<!--    border-radius: .25rem;-->
-<!--}-->
+                                <div class="card mb-4" id="userInfoCard">
+                                    <div class="card-header">Info confirmed by call</div>
+                                    <div class="card-body">
+                                        {% for tb_referral_client_info in tb_referral_client %}
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">Can be contacted?</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0" id="canBeContacted">{{ client_primary_phone.can_be_contacted }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">Age Range</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0" id="ageRange">{{ tb_referral_client_info.age_range }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        {% endfor %}
+                                        <div class="row last-row">
+                                            <div class="col-sm-7">
+                                                <!--<a class="btn btn-info" href="{% url 'client_info' id=client.id %}">Add</a>-->
+                                                <!-- Button trigger modal -->
+                                                <button type="button" id="userInfoModalButton" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#userInfoModal" {% if tb_referral_client %}disabled{% endif %}>
+                                                    Add
+                                                </button>
+                                            </div>
+                                            <div class="col-sm-5"></div>
+                                        </div>
+                                    </div>
+                                </div>
 
-<!--.card-body {-->
-<!--    flex: 1 1 auto;-->
-<!--    min-height: 1px;-->
-<!--    padding: 1rem;-->
-<!--}-->
+                        {% comment %}{% else %}{% endcomment %}
+                            <!--<div class="card mb-4">-->
+                            <!--    <div class="card-header">Info confirmed by call</div>-->
+                            <!--    <div class="card-body">-->
 
-<!--.gutters-sm {-->
-<!--    margin-right: -8px;-->
-<!--    margin-left: -8px;-->
-<!--}-->
-
-<!--.gutters-sm>.col, .gutters-sm>[class*=col-] {-->
-<!--    padding-right: 8px;-->
-<!--    padding-left: 8px;-->
-<!--}-->
-<!--.mb-3, .my-3 {-->
-<!--    margin-bottom: 1rem!important;-->
-<!--}-->
-
-<!--.bg-gray-300 {-->
-<!--    background-color: #e2e8f0;-->
-<!--}-->
-<!--.h-100 {-->
-<!--    height: 100%!important;-->
-<!--}-->
-<!--.shadow-none {-->
-<!--    box-shadow: none!important;-->
-<!--}-->
+                            <!--    </div>-->
+                            <!--</div>-->
+                        {% comment %}{% endif %}{% endcomment %}
+                        {% comment %}{% if client_call_symptoms_questions_answers %}{% endcomment %}
+                            <div class="card mb-4">
+                                <div class="card-header">Symptoms confirmed by call</div>
+                                <div class="card-body">
+                                    {% for client_call_symptom_question_answer in client_call_symptoms_questions_answers %}
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">{{ client_call_symptom_question_answer.question.description }}</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_call_symptom_question_answer.answer }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    {% endfor %}
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <a class="btn btn-info" href="{% url 'client_call_symptoms' id=client.id %}">Add</a>
+                                            </div>
+                                            <div class="col-sm-5"></div>
+                                        </div>
+                                </div>
+                            </div>
+                        {% comment %}{% elif tb_referral_client %}
+                            <div class="card mb-4">
+                                <div class="card-header">Symptoms confirmed by call</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <a class="btn btn-info"
+                                               href="{% url 'client_call_symptoms' id=client.id %}">Add</a>
+                                        </div>
+                                        <div class="col-sm-5"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}{% endcomment %}
+                        {% if client_tb_referral %}
+                            {% for client_tb_referral_info in client_tb_referral %}
+                                <div class="card mb-4">
+                                    <div class="card-header">TB Referral</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">Willing to be referred?</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_tb_referral_info.is_willing_to_be_referred }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        {% if tb_referral_client %}
+                                            {% for tb_referral_client_info in tb_referral_client %}
+                                                <div class="row">
+                                                    <div class="col-sm-7">
+                                                        <p class="mb-0">Confirmed Name</p>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <p class="text-muted mb-0">{{ tb_referral_client_info.name }}</p>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% elif client_call_symptoms_questions_answers %}
+                            <div class="card mb-4">
+                                <div class="card-header">TB Referral</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <a class="btn btn-info" href="{% url 'refer_tb_client' id=client.id %}">Add</a>
+                                        </div>
+                                        <div class="col-sm-5"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if client_social_platforms %}
+                            <div class="card mb-4">
+                                <div class="card-header">Active Social Platform by Primary Phone Number</div>
+                                <div class="card-body">
+                                    {% for client_social_platform in client_social_platforms %}
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">{{ client_social_platform.social_platform.name }}</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_social_platform.is_active }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% elif client_tb_referral %}
+                            <div class="card mb-4">
+                                <div class="card-header">Active Social Platform by Primary Phone Number</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <a class="btn btn-info"
+                                               href="{% url 'client_active_social_platforms' id=client.id %}">Add</a>
+                                        </div>
+                                        <div class="col-sm-5"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if client_ref_locations %}
+                            {% for client_ref_location in client_ref_locations %}
+                                <div class="card mb-4">
+                                    <div class="card-header">Referred Location {{ forloop.counter }}</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">State/Region</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_ref_location.site_location.state_region.name }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">Township</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_ref_location.site_location.township.name }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">Channel Name</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_ref_location.site_location.channel.name }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">Org Name</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_ref_location.site_location.organization.name }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">Site Address</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">
+                                                    {{ client_ref_location.site_location.site_address }} {{ client_ref_location.site_location.site_address_mm }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        {% if client_ref_location.site_location.clinic_name %}
+                                            <div class="row">
+                                                <div class="col-sm-7">
+                                                    <p class="mb-0">Clinic Name</p>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <p class="text-muted mb-0">
+                                                        {{ client_ref_location.site_location.clinic_name }} {{ client_ref_location.site_location.clinic_name_mm }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        {% endif %}
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">Referred Date</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_ref_location.action_date | date:'l, F jS Y' }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        {% if forloop.counter == client_ref_locations|length %}
+                                            <div class="row">
+                                                <div class="col-sm-7">
+                                                    <a class="btn btn-info"
+                                                       href="{% url 'client_ref_locations' id=client.id %}">Add More Refer</a>
+                                                </div>
+                                                <div class="col-sm-5"></div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% elif client_social_platforms %}
+                            <div class="card mb-4">
+                                <div class="card-header">Referred Location</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <a class="btn btn-info"
+                                               href="{% url 'client_ref_locations' id=client.id %}">Add</a>
+                                        </div>
+                                        <div class="col-sm-5"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if client_reach_info %}
+                            {% for client_reach_information in client_reach_info %}
+                                <div class="card mb-4">
+                                    <div class="card-header">Reach Info</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">Is reached to referral site?</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_reach_information.is_reached_to_referral_site }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">Reach date</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_reach_information.reached_date | date:'l, F jS Y' }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% elif client_ref_locations %}
+                            <div class="card mb-4">
+                                <div class="card-header">Reach Info</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <a class="btn btn-info"
+                                               href="{% url 'client_reach_info' id=client.id %}">Add</a>
+                                        </div>
+                                        <div class="col-sm-5"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if client_investigated_results %}
+                            {% for client_investigated_result in client_investigated_results %}
+                                <div class="card mb-4">
+                                    <div class="card-header">Taken Investigation {{ forloop.counter }}</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">{{ client_investigated_result.taken_investigation_type.type_description }}</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_investigated_result.taken_investigation_result.result_description }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">Investigation Date</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_investigated_result.taken_investigation_date | date:'l, F jS Y' }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        {% if forloop.counter == client_investigated_results|length %}
+                                            <div class="row">
+                                                <div class="col-sm-7">
+                                                    <a class="btn btn-info"
+                                                       href="{% url 'client_taken_investigations' id=client.id %}">Add More Investigation</a>
+                                                </div>
+                                                <div class="col-sm-5"></div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% elif client_reach_info %}
+                            <div class="card mb-4">
+                                <div class="card-header">Taken Investigation</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <a class="btn btn-info"
+                                               href="{% url 'client_taken_investigations' id=client.id %}">Add</a>
+                                        </div>
+                                        <div class="col-sm-5"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if client_tb_confirmation %}
+                            {% for client_tb_confirmation_info in client_tb_confirmation %}
+                                <div class="card mb-4">
+                                    <div class="card-header">TB Confirmation</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">Is bat confirmed?</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_tb_confirmation_info.is_bat_confirmed }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">TB Diagnosis</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_tb_confirmation_info.tb_diagnosis }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">Diagnosis Date</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_tb_confirmation_info.diagnosis_date | date:'l, F jS Y' }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% elif client_investigated_results %}
+                            <div class="card mb-4">
+                                <div class="card-header">TB Confirmation</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <a class="btn btn-info"
+                                               href="{% url 'client_tb_confirmation' id=client.id %}">Add</a>
+                                        </div>
+                                        <div class="col-sm-5"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if client_tb_treatment %}
+                            {% for client_tb_treatment_info in client_tb_treatment %}
+                                <div class="card mb-4">
+                                    <div class="card-header">TB Treatment {{ forloop.counter }}</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">Is registered for Tx?</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_tb_treatment_info.is_registered_for_tx }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">TB Regime</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_tb_treatment_info.tx_regime }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <p class="mb-0">TB Register Date</p>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p class="text-muted mb-0">{{ client_tb_treatment_info.registered_date | date:'l, F jS Y' }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% elif client_tb_confirmation %}
+                            <div class="card mb-4">
+                                <div class="card-header">TB Treatment {{ forloop.counter }}</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <a class="btn btn-info"
+                                               href="{% url 'client_tb_treatment' id=client.id %}">Add</a>
+                                        </div>
+                                        <div class="col-sm-5"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% include 'callcenter/add_user_info_modal_form.html' %}
+        {% include 'callcenter/add_phone_modal_form.html' %}
+    </main>
 {% endblock %}
-{% block content%}
-
-<main>
-
-<section style="background-color: #eee;">
-  <div class="container py-5">
-
-    <div class="row">
-      <div class="col-lg-4">
-        <div class="card mb-4">
-          <div class="card-body text-center">
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-              class="rounded-circle img-fluid" style="width: 150px;">
-
-            <div class="row">
-                <div class="col-6 text-end">
-                    <h5 class="my-3">Primary Phone :</h5>
-                </div>
-                <div class="col-6 text-start">
-                    <h5 class="my-3">{{client_primary_phone.phone_number}}</h5>
-                </div>
-            </div>
-
-
-            {% if client_additional_phone %}
-            {% for each_phone in client_additional_phone %}
-            <div class="row">
-                <div class="col-6 text-end">
-                    <p class="mb-1"><strong>Additional Phone {{forloop.counter}} :</strong></p>
-                </div>
-                <div class="col-6 text-start">
-                    <p class="text-muted mb-1">{{each_phone.phone_number}}</p>
-                </div>
-            </div>
-            {% endfor %}
-            {% endif %}
-            <br>
-            <div class="row">
-                <div class="col-6 text-end">
-                    <p class="mb-1"><strong>Client Type :</strong></p>
-                </div>
-                <div class="col-6 text-start">
-                    <p class="text-muted mb-1">{{client.type}}</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6 text-end">
-                    <p class="mb-1"><strong>Gender :</strong></p>
-                </div>
-                <div class="col-6 text-start">
-                    <p class="text-muted mb-1">{{client.gender}}</p>
-                </div>
-            </div>
-            <div class="row mb-4">
-                <div class="col-6 text-end">
-                    <p class="mb-1"><strong>Age Range :</strong></p>
-                </div>
-                <div class="col-6 text-start">
-                    <p class="text-muted mb-1">{{client.age_range}}</p>
-                </div>
-            </div>
-            <div class="d-flex justify-content-center mb-2">
-              <!--<button type="button" class="btn btn-primary">Update</button>-->
-              <!--<div class="btn-group">-->
-              <!--    <a href="" type="button" class="btn btn-sm btn-outline-secondary">-->
-              <!--      View Details-->
-              <!--    </a>-->
-              <!--  </div>-->
-                <a href="{% url 'client_additional_phone' id=client.id %}" class="btn btn-primary">
-                    Add Phone
-                  </a>
-              <!--<button type="button" class="btn btn-outline-primary ms-1">Message</button>-->
-            </div>
-          </div>
-          <div class="card-footer">{{client.stage_id}} {{client.stage.description}}</div>
-        </div>
-        {% if call_attempts %}
-        <div class="card mb-4 mb-lg-0">
-          <div class="card-header">Call Logs</div>
-          <div class="card-body p-0">
-            <ul class="list-group list-group-flush rounded-3">
-              {% for call_attempt in call_attempts %}
-              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <i class="fas fa-globe fa-lg text-warning"></i>
-                <p class="mb-0">{{ call_attempt.current_attempt_date | date:'l, F jS Y'}}</p>
-              </li>
-              {% endfor %}
-
-            </ul>
-          </div>
-        </div>
-        {% endif %}
-      </div>
-      <div class="col-lg-8">
-
-        <div class="card mb-4">
-          <div class="card-header">
-              Symptoms from Chatbot
-          </div>
-          <div class="card-body">
-            {% for client_chatbot_symptom_question_answer in client_chatbot_symptoms_questions_answers %}
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">{{ client_chatbot_symptom_question_answer.question.description}}</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_chatbot_symptom_question_answer.answer}}</p>
-              </div>
-            </div>
-            <hr>
-            {% endfor %}
-
-          </div>
-        </div>
-
-        {% if tb_referral_client %}
-        {% for tb_referral_client_info in tb_referral_client%}
-        <div class="card mb-4">
-          <div class="card-header">
-              Info confirmed by call
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Can be contacted?</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_primary_phone.can_be_contacted}}</p>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Age Range</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{tb_referral_client_info.age_range}}</p>
-              </div>
-            </div>
-            <hr>
-
-          </div>
-        </div>
-        {% endfor %}
-        {% else %}
-        <div class="card mb-4">
-          <div class="card-header">
-              Info confirmed by call
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-sm-7">
-                <a class="btn btn-info" href="{% url 'client_info' id=client.id %}">Add</a>
-              </div>
-              <div class="col-sm-5">
-
-              </div>
-            </div>
-
-
-
-          </div>
-        </div>
-        {% endif %}
-
-
-        {% if client_call_symptoms_questions_answers %}
-        <div class="card mb-4">
-          <div class="card-header">
-              Symptoms confirmed by call
-          </div>
-          <div class="card-body">
-            {% for client_call_symptom_question_answer in client_call_symptoms_questions_answers%}
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">{{client_call_symptom_question_answer.question.description}}</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_call_symptom_question_answer.answer}}</p>
-              </div>
-            </div>
-            <hr>
-            {% endfor %}
-
-
-
-          </div>
-        </div>
-        {% elif tb_referral_client %}
-        <div class="card mb-4">
-          <div class="card-header">
-              Symptoms confirmed by call
-          </div>
-          <div class="card-body">
-
-            <div class="row">
-              <div class="col-sm-7">
-                <a class="btn btn-info" href="{% url 'client_call_symptoms' id=client.id %}">Add</a>
-              </div>
-              <div class="col-sm-5">
-
-              </div>
-            </div>
-
-
-
-
-          </div>
-        </div>
-        {% endif %}
-
-
-        {% if client_tb_referral %}
-        {% for client_tb_referral_info in client_tb_referral%}
-        <div class="card mb-4">
-          <div class="card-header">
-              TB Referral
-          </div>
-          <div class="card-body">
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Willing to be referred?</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_tb_referral_info.is_willing_to_be_referred}}</p>
-              </div>
-            </div>
-            <hr>
-
-            {% if tb_referral_client %}
-            {% for tb_referral_client_info in tb_referral_client%}
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Confirmed Name</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{tb_referral_client_info.name}}</p>
-              </div>
-            </div>
-            <hr>
-            {% endfor %}
-            {% endif %}
-
-          </div>
-        </div>
-        {% endfor %}
-        {% elif client_call_symptoms_questions_answers %}
-        <div class="card mb-4">
-          <div class="card-header">
-              TB Referral
-          </div>
-          <div class="card-body">
-
-            <div class="row">
-              <div class="col-sm-7">
-                <a class="btn btn-info" href="{% url 'refer_tb_client' id=client.id %}">Add</a>
-              </div>
-              <div class="col-sm-5">
-
-              </div>
-            </div>
-
-
-
-
-          </div>
-        </div>
-        {% endif %}
-
-
-        {% if client_social_platforms %}
-        <div class="card mb-4">
-          <div class="card-header">
-              Active Social Platform by Primary Phone Number
-          </div>
-          <div class="card-body">
-
-            {% for client_social_platform in client_social_platforms %}
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">{{client_social_platform.social_platform.name}}</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_social_platform.is_active}}</p>
-              </div>
-            </div>
-            <hr>
-            {% endfor %}
-
-
-
-
-
-          </div>
-        </div>
-        {% elif client_tb_referral %}
-        <div class="card mb-4">
-          <div class="card-header">
-              Active Social Platform by Primary Phone Number
-          </div>
-          <div class="card-body">
-
-
-            <div class="row">
-              <div class="col-sm-7">
-                <a class="btn btn-info" href="{% url 'client_active_social_platforms' id=client.id %}">Add</a>
-              </div>
-              <div class="col-sm-5">
-
-              </div>
-            </div>
-
-
-
-
-
-
-          </div>
-        </div>
-        {% endif %}
-
-
-        {% if client_ref_locations %}
-        {% for client_ref_location in client_ref_locations %}
-        <div class="card mb-4">
-          <div class="card-header">
-              Referred Location {{forloop.counter}}
-          </div>
-          <div class="card-body">
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">State/Region</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_ref_location.site_location.state_region.name}}</p>
-              </div>
-            </div>
-            <hr>
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Township</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_ref_location.site_location.township.name}}</p>
-              </div>
-            </div>
-            <hr>
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Channel Name</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_ref_location.site_location.channel.name}}</p>
-              </div>
-            </div>
-            <hr>
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Org Name</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_ref_location.site_location.organization.name}}</p>
-              </div>
-            </div>
-            <hr>
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Site Address</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_ref_location.site_location.site_address}} {{client_ref_location.site_location.site_address_mm}}</p>
-              </div>
-            </div>
-            <hr>
-
-            {% if client_ref_location.site_location.clinic_name %}
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Clinic Name</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_ref_location.site_location.clinic_name}} {{client_ref_location.site_location.clinic_name_mm}}</p>
-              </div>
-            </div>
-            <hr>
-            {% endif %}
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Referred Date</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_ref_location.action_date | date:'l, F jS Y'}}</p>
-              </div>
-            </div>
-            <hr>
-
-            {% if forloop.counter == client_ref_locations|length %}
-            <div class="row">
-              <div class="col-sm-7">
-                <a class="btn btn-info" href="{% url 'client_ref_locations' id=client.id %}">Add More Refer</a>
-              </div>
-              <div class="col-sm-5">
-
-              </div>
-            </div>
-
-            {% endif %}
-
-
-
-
-
-
-
-          </div>
-        </div>
-        {% endfor %}
-        {% elif client_social_platforms %}
-        <div class="card mb-4">
-          <div class="card-header">
-              Referred Location
-          </div>
-          <div class="card-body">
-
-            <div class="row">
-              <div class="col-sm-7">
-                <a class="btn btn-info" href="{% url 'client_ref_locations' id=client.id %}">Add</a>
-              </div>
-              <div class="col-sm-5">
-
-              </div>
-            </div>
-
-
-
-
-
-
-          </div>
-        </div>
-        {% endif %}
-
-
-        {% if client_reach_info %}
-        {% for client_reach_information in client_reach_info %}
-        <div class="card mb-4">
-          <div class="card-header">
-              Reach Info
-          </div>
-          <div class="card-body">
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Is reached to referral site?</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_reach_information.is_reached_to_referral_site}}</p>
-              </div>
-            </div>
-            <hr>
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Reach date</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_reach_information.reached_date | date:'l, F jS Y'}}</p>
-              </div>
-            </div>
-            <hr>
-
-          </div>
-        </div>
-        {% endfor %}
-        {% elif client_ref_locations %}
-        <div class="card mb-4">
-          <div class="card-header">
-              Reach Info
-          </div>
-          <div class="card-body">
-
-            <div class="row">
-              <div class="col-sm-7">
-                <a class="btn btn-info" href="{% url 'client_reach_info' id=client.id %}">Add</a>
-              </div>
-              <div class="col-sm-5">
-
-              </div>
-            </div>
-
-
-          </div>
-        </div>
-        {% endif %}
-
-
-        {% if client_investigated_results %}
-        {% for client_investigated_result in client_investigated_results %}
-        <div class="card mb-4">
-          <div class="card-header">
-              Taken Investigation {{forloop.counter}}
-          </div>
-          <div class="card-body">
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">{{client_investigated_result.taken_investigation_type.type_description}}</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_investigated_result.taken_investigation_result.result_description}}</p>
-              </div>
-            </div>
-            <hr>
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Investigation Date</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_investigated_result.taken_investigation_date | date:'l, F jS Y'}}</p>
-              </div>
-            </div>
-            <hr>
-
-            {% if forloop.counter == client_investigated_results|length %}
-            <div class="row">
-              <div class="col-sm-7">
-                <a class="btn btn-info" href="{% url 'client_taken_investigations' id=client.id %}">Add More Investigation</a>
-              </div>
-              <div class="col-sm-5">
-
-              </div>
-            </div>
-            {% endif %}
-
-
-          </div>
-        </div>
-        {% endfor %}
-        {% elif client_reach_info %}
-        <div class="card mb-4">
-          <div class="card-header">
-              Taken Investigation
-          </div>
-          <div class="card-body">
-
-            <div class="row">
-              <div class="col-sm-7">
-                <a class="btn btn-info" href="{% url 'client_taken_investigations' id=client.id %}">Add</a>
-              </div>
-              <div class="col-sm-5">
-
-              </div>
-            </div>
-
-
-
-          </div>
-        </div>
-        {% endif %}
-
-
-        {% if client_tb_confirmation %}
-        {% for client_tb_confirmation_info in client_tb_confirmation %}
-        <div class="card mb-4">
-          <div class="card-header">
-              TB Confirmation
-          </div>
-          <div class="card-body">
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Is bat confirmed?</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_tb_confirmation_info.is_bat_confirmed}}</p>
-              </div>
-            </div>
-            <hr>
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">TB Diagnosis</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_tb_confirmation_info.tb_diagnosis}}</p>
-              </div>
-            </div>
-            <hr>
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Diagnosis Date</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_tb_confirmation_info.diagnosis_date | date:'l, F jS Y'}}</p>
-              </div>
-            </div>
-            <hr>
-
-          </div>
-        </div>
-        {% endfor %}
-        {% elif client_investigated_results %}
-        <div class="card mb-4">
-          <div class="card-header">
-              TB Confirmation
-          </div>
-          <div class="card-body">
-
-            <div class="row">
-              <div class="col-sm-7">
-                <a class="btn btn-info" href="{% url 'client_tb_confirmation' id=client.id %}">Add</a>
-              </div>
-              <div class="col-sm-5">
-
-              </div>
-            </div>
-
-
-
-          </div>
-        </div>
-        {% endif %}
-
-
-        {% if client_tb_treatment %}
-        {% for client_tb_treatment_info in client_tb_treatment %}
-        <div class="card mb-4">
-          <div class="card-header">
-              TB Treatment {{forloop.counter}}
-          </div>
-          <div class="card-body">
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">Is registered for Tx?</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_tb_treatment_info.is_registered_for_tx}}</p>
-              </div>
-            </div>
-            <hr>
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">TB Regime</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_tb_treatment_info.tx_regime}}</p>
-              </div>
-            </div>
-            <hr>
-
-            <div class="row">
-              <div class="col-sm-7">
-                <p class="mb-0">TB Register Date</p>
-              </div>
-              <div class="col-sm-5">
-                <p class="text-muted mb-0">{{client_tb_treatment_info.registered_date | date:'l, F jS Y'}}</p>
-              </div>
-            </div>
-            <hr>
-
-          </div>
-        </div>
-        {% endfor %}
-        {% elif client_tb_confirmation %}
-        <div class="card mb-4">
-          <div class="card-header">
-              TB Treatment {{forloop.counter}}
-          </div>
-          <div class="card-body">
-
-            <div class="row">
-              <div class="col-sm-7">
-                <a class="btn btn-info" href="{% url 'client_tb_treatment' id=client.id %}">Add</a>
-              </div>
-              <div class="col-sm-5">
-
-              </div>
-            </div>
-
-
-          </div>
-        </div>
-        {% endif %}
-
-
-
-
-      </div>
-    </div>
-  </div>
-</section>
-
-
-</main>
-
-
-
+{% block js  %}
+    <script src="{% static 'callcenter/js/main.js' %}"></script>
 {% endblock %}

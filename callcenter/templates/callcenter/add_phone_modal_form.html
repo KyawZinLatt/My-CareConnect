@@ -1,0 +1,26 @@
+<!-- Modal -->
+<div class="modal fade" id="phoneNumberModal" tabindex="-1" aria-labelledby="phoneNumberModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="phoneNumberModalLabel">Additional Phone Number</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="formErrorMessage" class="alert alert-danger d-none" role="alert">
+        </div>
+        <form id="phoneNumberForm" data-client-id="{{ client.id }}">
+          
+          <div class="mb-3">
+            <label for="id_phone_number" class="form-label">Phone Number</label>
+            <input type="tel" name="phone_number" class="form-control" placeholder="+959..." maxlength="13" required id="id_phone_number">
+          </div>
+
+          <div class="col-12">
+            <button type="button" class="btn btn-primary" id="submitPhoneNumber">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

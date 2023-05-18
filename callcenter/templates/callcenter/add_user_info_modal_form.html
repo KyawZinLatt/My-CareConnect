@@ -1,0 +1,35 @@
+<!-- User Info Modal -->
+<div class="modal fade" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userInfoModalLabel">User Info</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="userInfoFormErrorMessage" class="alert alert-danger d-none"></div>
+        <form id="userInfoForm" data-client-id="{{ client.id }}">
+          <div class="mb-3">
+            <label for="can_contact" class="form-label">Can we contact your number?</label>
+            <select name="can_contact" class="form-control" required id="id_can_contact">
+              <option value="" disabled selected>Select Answer</option>
+              <option value="True">Yes</option>
+              <option value="False">No</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="age_range" class="form-label">Age Range</label>
+            <select name="age_range" class="form-control" required id="id_age_range">
+              <option value="" disabled selected>Select Age Range</option>
+              <option value="BelowFifteen">BelowFifteen</option>
+              <option value="FifteenAndAbove">FifteenAndAbove</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <button type="button" class="btn btn-primary" id="submitUserInfo">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
