@@ -76,7 +76,7 @@
                                     <!--    </a>-->
                                     <!--  </div>-->
                                     {% comment %}<a href="{% url 'client_additional_phone' id=client.id %}"
-                                       class="btn btn-primary">Add Phone</a>{% endcomment %}
+   class="btn btn-primary">Add Phone</a>{% endcomment %}
                                     <!-- Button trigger modal -->
                                     <button type="button"
                                             class="btn btn-primary"
@@ -85,7 +85,7 @@
                                     <!--<button type="button" class="btn btn-outline-primary ms-1">Message</button>-->
                                 </div>
                             </div>
-                            <div class="card-footer">{{ client.stage_id }} {{ client.stage.description }}</div>
+                            <div class="card-footer" id="clientStatus">{{ client.stage.description }}</div>
                         </div>
                         {% if call_attempts %}
                             <div class="card mb-4 mb-lg-0">
@@ -121,166 +121,162 @@
                             </div>
                         </div>
                         {% comment %}{% if tb_referral_client %}{% endcomment %}
-
-                                <div class="card mb-4" id="userInfoCard">
-                                    <div class="card-header">Info confirmed by call</div>
-                                    <div class="card-body">
-                                        {% for tb_referral_client_info in tb_referral_client %}
-                                        <div class="row">
-                                            <div class="col-sm-7">
-                                                <p class="mb-0">Can be contacted?</p>
-                                            </div>
-                                            <div class="col-sm-5">
-                                                <p class="text-muted mb-0" id="canBeContacted">{{ client_primary_phone.can_be_contacted }}</p>
-                                            </div>
+                        <div class="card mb-4" id="userInfoCard">
+                            <div class="card-header">Info confirmed by call</div>
+                            <div class="card-body">
+                                {% for tb_referral_client_info in tb_referral_client %}
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <p class="mb-0">Can be contacted?</p>
                                         </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-sm-7">
-                                                <p class="mb-0">Age Range</p>
-                                            </div>
-                                            <div class="col-sm-5">
-                                                <p class="text-muted mb-0" id="ageRange">{{ tb_referral_client_info.age_range }}</p>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        {% endfor %}
-                                        <div class="row last-row">
-                                            <div class="col-sm-7">
-                                                <!--<a class="btn btn-info" href="{% url 'client_info' id=client.id %}">Add</a>-->
-                                                <!-- Button trigger modal -->
-                                                <button type="button" id="userInfoModalButton" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#userInfoModal" {% if tb_referral_client %}disabled{% endif %}>
-                                                    Add
-                                                </button>
-                                            </div>
-                                            <div class="col-sm-5"></div>
+                                        <div class="col-sm-5">
+                                            <p class="text-muted mb-0" id="canBeContacted">{{ client_primary_phone.can_be_contacted }}</p>
                                         </div>
                                     </div>
-                                </div>
-
-                        {% comment %}{% else %}{% endcomment %}
-                            <!--<div class="card mb-4">-->
-                            <!--    <div class="card-header">Info confirmed by call</div>-->
-                            <!--    <div class="card-body">-->
-
-                            <!--    </div>-->
-                            <!--</div>-->
-                        {% comment %}{% endif %}{% endcomment %}
-                        {% comment %}{% if client_call_symptoms_questions_answers %}{% endcomment %}
-                            <div class="card mb-4" id="symptomsCard">
-                                <div class="card-header">Symptoms confirmed by call</div>
-                                <div class="card-body">
-                                    {% for client_call_symptom_question_answer in client_call_symptoms_questions_answers %}
-                                        <div class="row">
-                                            <div class="col-sm-7">
-                                                <p class="mb-0">{{ client_call_symptom_question_answer.question.description }}</p>
-                                            </div>
-                                            <div class="col-sm-5">
-                                                <p class="text-muted mb-0">{{ client_call_symptom_question_answer.answer }}</p>
-                                            </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <p class="mb-0">Age Range</p>
                                         </div>
-                                        <hr>
-                                    {% endfor %}
-                                        <div class="row last-row">
-                                            <div class="col-sm-7">
-                                                <!--<a class="btn btn-info" href="{% url 'client_call_symptoms' id=client.id %}">Add</a>-->
-                                                <button type="button" id="symptomsModalButton" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#symptomsModal" {% if client_call_symptoms_questions_answers %}disabled{% endif %}>
-                                                    Add
-                                                </button>
-                                            </div>
-                                            <div class="col-sm-5"></div>
+                                        <div class="col-sm-5">
+                                            <p class="text-muted mb-0" id="ageRange">{{ tb_referral_client_info.age_range }}</p>
                                         </div>
+                                    </div>
+                                    <hr>
+                                {% endfor %}
+                                <div class="row last-row">
+                                    <div class="col-sm-7">
+                                        <!--<a class="btn btn-info" href="{% url 'client_info' id=client.id %}">Add</a>-->
+                                        <!-- Button trigger modal -->
+                                        <button type="button"
+                                                id="userInfoModalButton"
+                                                class="btn btn-info"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#userInfoModal"
+                                                {% if tb_referral_client %}disabled{% endif %}>Add</button>
+                                    </div>
+                                    <div class="col-sm-5"></div>
                                 </div>
                             </div>
+                        </div>
+                        {% comment %}{% if client_call_symptoms_questions_answers %}{% endcomment %}
+                        <div class="card mb-4" id="symptomsCard">
+                            <div class="card-header">Symptoms confirmed by call</div>
+                            <div class="card-body">
+                                {% for client_call_symptom_question_answer in client_call_symptoms_questions_answers %}
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <p class="mb-0">{{ client_call_symptom_question_answer.question.description }}</p>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <p class="text-muted mb-0">{{ client_call_symptom_question_answer.answer }}</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                {% endfor %}
+                                <div class="row last-row">
+                                    <div class="col-sm-7">
+                                        <!--<a class="btn btn-info"
+   href="{% url 'client_call_symptoms' id=client.id %}">Add</a>-->
+                                        <button type="button"
+                                                id="symptomsModalButton"
+                                                class="btn btn-info"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#symptomsModal"
+                                                {% if client_call_symptoms_questions_answers %}disabled{% endif %}>
+                                            Add
+                                        </button>
+                                    </div>
+                                    <div class="col-sm-5"></div>
+                                </div>
+                            </div>
+                        </div>
                         {% comment %}{% elif tb_referral_client %}
                             <div class="card mb-4">
                                 <div class="card-header">Symptoms confirmed by call</div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-7">
-                                            <a class="btn btn-info"
-                                               href="{% url 'client_call_symptoms' id=client.id %}">Add</a>
+                                            <a class="btn btn-info" href="{% url 'client_call_symptoms' id=client.id %}">Add</a>
                                         </div>
                                         <div class="col-sm-5"></div>
                                     </div>
                                 </div>
                             </div>
                         {% endif %}{% endcomment %}
-                        {% if client_tb_referral %}
-                            {% for client_tb_referral_info in client_tb_referral %}
-                                <div class="card mb-4">
-                                    <div class="card-header">TB Referral</div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-sm-7">
-                                                <p class="mb-0">Willing to be referred?</p>
-                                            </div>
-                                            <div class="col-sm-5">
-                                                <p class="text-muted mb-0">{{ client_tb_referral_info.is_willing_to_be_referred }}</p>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        {% if tb_referral_client %}
-                                            {% for tb_referral_client_info in tb_referral_client %}
-                                                <div class="row">
-                                                    <div class="col-sm-7">
-                                                        <p class="mb-0">Confirmed Name</p>
-                                                    </div>
-                                                    <div class="col-sm-5">
-                                                        <p class="text-muted mb-0">{{ tb_referral_client_info.name }}</p>
-                                                    </div>
-                                                </div>
-                                                <hr>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% elif client_call_symptoms_questions_answers %}
-                            <div class="card mb-4">
-                                <div class="card-header">TB Referral</div>
-                                <div class="card-body">
+                        {% comment %}{% if client_tb_referral %}{% endcomment %}
+                        <div class="card mb-4" id="tbReferralCard">
+                            <div class="card-header">TB Referral</div>
+                            <div class="card-body">
+                                {% for client_tb_referral_info in client_tb_referral %}
                                     <div class="row">
                                         <div class="col-sm-7">
-                                            <a class="btn btn-info" href="{% url 'refer_tb_client' id=client.id %}">Add</a>
+                                            <p class="mb-0">Willing to be referred?</p>
                                         </div>
-                                        <div class="col-sm-5"></div>
+                                        <div class="col-sm-5">
+                                            <p class="text-muted mb-0">{{ client_tb_referral_info.is_willing_to_be_referred }}</p>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        {% endif %}
-                        {% if client_social_platforms %}
-                            <div class="card mb-4">
-                                <div class="card-header">Active Social Platform by Primary Phone Number</div>
-                                <div class="card-body">
-                                    {% for client_social_platform in client_social_platforms %}
+                                    <hr>
+                                    {% for tb_referral_client_info in tb_referral_client %}
                                         <div class="row">
                                             <div class="col-sm-7">
-                                                <p class="mb-0">{{ client_social_platform.social_platform.name }}</p>
+                                                <p class="mb-0">Confirmed Name</p>
                                             </div>
                                             <div class="col-sm-5">
-                                                <p class="text-muted mb-0">{{ client_social_platform.is_active }}</p>
+                                                <p class="text-muted mb-0">{{ tb_referral_client_info.name }}</p>
                                             </div>
                                         </div>
                                         <hr>
                                     {% endfor %}
+                                {% endfor %}
+                                <div class="row last-row">
+                                    <div class="col-sm-7">
+                                        <!-- Modal Trigger Button -->
+                                        <button type="button"
+                                                id="tbReferralModalButton"
+                                                class="btn btn-info"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#tbReferralModal"
+                                                {% if client_tb_referral %}disabled{% endif %}>Add</button>
+                                    </div>
+                                    <div class="col-sm-5"></div>
                                 </div>
                             </div>
-                        {% elif client_tb_referral %}
-                            <div class="card mb-4">
-                                <div class="card-header">Active Social Platform by Primary Phone Number</div>
-                                <div class="card-body">
+                        </div>
+
+                        <div class="card mb-4" id="socialPlatformCard">
+                            <div class="card-header">Active Social Platform by Primary Phone Number</div>
+                            <div class="card-body">
+                                {% for client_social_platform in client_social_platforms %}
                                     <div class="row">
                                         <div class="col-sm-7">
-                                            <a class="btn btn-info"
-                                               href="{% url 'client_active_social_platforms' id=client.id %}">Add</a>
+                                            <p class="mb-0">{{ client_social_platform.social_platform.name }}</p>
                                         </div>
-                                        <div class="col-sm-5"></div>
+                                        <div class="col-sm-5">
+                                            <p class="text-muted mb-0">{{ client_social_platform.is_active }}</p>
+                                        </div>
                                     </div>
+                                    <hr>
+                                {% endfor %}
+                                <div class="row last-row">
+                                    <div class="col-sm-7">
+                                        <!--<a class="btn btn-info"-->
+                                        <!--   href="{% url 'client_active_social_platforms' id=client.id %}">Add</a>-->
+                                        <!-- Button trigger modal -->
+                                        <button type="button"
+                                                class="btn btn-info"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#socialPlatformModal"
+                                                id="socialPlatformModalButton"
+                                                {% if client_social_platforms %}disabled{% endif %}>Add</button>
+                                    </div>
+                                    <div class="col-sm-5"></div>
                                 </div>
                             </div>
-                        {% endif %}
-                        {% if client_ref_locations %}
+                        </div>
+
+                        {% comment %}{% if client_ref_locations %}{% endcomment %}
                             {% for client_ref_location in client_ref_locations %}
                                 <div class="card mb-4">
                                     <div class="card-header">Referred Location {{ forloop.counter }}</div>
@@ -354,37 +350,50 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        {% if forloop.counter == client_ref_locations|length %}
+                                        {% comment %}{% if forloop.counter == client_ref_locations|length %}
                                             <div class="row">
                                                 <div class="col-sm-7">
                                                     <a class="btn btn-info"
                                                        href="{% url 'client_ref_locations' id=client.id %}">Add More Refer</a>
+                                                    <!-- Button trigger modal -->
+                                                    <button type="button"
+                                                            class="btn btn-info tbReferLocationModalButton"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#tbReferLocationModal"
+                                                            id="tbReferLocationModalButton">Add</button>
                                                 </div>
                                                 <div class="col-sm-5"></div>
                                             </div>
-                                        {% endif %}
+                                        {% endif %}{% endcomment %}
                                     </div>
                                 </div>
                             {% endfor %}
-                        {% elif client_social_platforms %}
+                        {% comment %}{% else %}{% endcomment %}
                             <div class="card mb-4">
                                 <div class="card-header">Referred Location</div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-7">
-                                            <a class="btn btn-info"
-                                               href="{% url 'client_ref_locations' id=client.id %}">Add</a>
+                                            <!--<a class="btn btn-info"-->
+                                            <!--   href="{% url 'client_ref_locations' id=client.id %}">Add</a>-->
+                                            <!-- Button trigger modal -->
+                                            <button type="button"
+                                                class="btn btn-info tbReferLocationModalButton"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#tbReferLocationModal"
+                                                id="tbReferLocationModalButton">Add</button>
                                         </div>
                                         <div class="col-sm-5"></div>
                                     </div>
                                 </div>
                             </div>
-                        {% endif %}
-                        {% if client_reach_info %}
-                            {% for client_reach_information in client_reach_info %}
-                                <div class="card mb-4">
+                        {% comment %}{% endif %}
+                        {% if client_reach_info %}{% endcomment %}
+
+                                <div class="card mb-4" id="reachInfoCard">
                                     <div class="card-header">Reach Info</div>
                                     <div class="card-body">
+                                        {% for client_reach_information in client_reach_info %}
                                         <div class="row">
                                             <div class="col-sm-7">
                                                 <p class="mb-0">Is reached to referral site?</p>
@@ -403,24 +412,26 @@
                                             </div>
                                         </div>
                                         <hr>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% elif client_ref_locations %}
-                            <div class="card mb-4">
-                                <div class="card-header">Reach Info</div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-7">
-                                            <a class="btn btn-info"
-                                               href="{% url 'client_reach_info' id=client.id %}">Add</a>
+                                        {% endfor %}
+                                        <div class="row last-row">
+                                            <div class="col-sm-7">
+                                                <!--<a class="btn btn-info"-->
+                                                <!--    href="{% url 'client_reach_info' id=client.id %}">Add</a>-->
+                                                <!-- Button trigger modal -->
+                                                <button type="button"
+                                                    class="btn btn-info reachInfoModalButton"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#reachInfoModal"
+                                                    id="reachInfoModalButton"
+                                                    {% if client_social_platforms %}disabled{% endif %}>Add</button>
+                                            </div>
+                                            <div class="col-sm-5"></div>
                                         </div>
-                                        <div class="col-sm-5"></div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endif %}
-                        {% if client_investigated_results %}
+
+
+
                             {% for client_investigated_result in client_investigated_results %}
                                 <div class="card mb-4">
                                     <div class="card-header">Taken Investigation {{ forloop.counter }}</div>
@@ -443,37 +454,35 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        {% if forloop.counter == client_investigated_results|length %}
-                                            <div class="row">
-                                                <div class="col-sm-7">
-                                                    <a class="btn btn-info"
-                                                       href="{% url 'client_taken_investigations' id=client.id %}">Add More Investigation</a>
-                                                </div>
-                                                <div class="col-sm-5"></div>
-                                            </div>
-                                        {% endif %}
+
                                     </div>
                                 </div>
                             {% endfor %}
-                        {% elif client_reach_info %}
+
                             <div class="card mb-4">
                                 <div class="card-header">Taken Investigation</div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-7">
-                                            <a class="btn btn-info"
-                                               href="{% url 'client_taken_investigations' id=client.id %}">Add</a>
+                                            <!--<a class="btn btn-info"-->
+                                            <!--   href="{% url 'client_taken_investigations' id=client.id %}">Add</a>-->
+                                            <button type="button"
+                                                            class="btn btn-info takenInvestigationModalButton"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#takenInvestigationModal"
+                                                            id="takenInvestigationModalButton">Add</button>
                                         </div>
                                         <div class="col-sm-5"></div>
                                     </div>
                                 </div>
                             </div>
-                        {% endif %}
-                        {% if client_tb_confirmation %}
-                            {% for client_tb_confirmation_info in client_tb_confirmation %}
-                                <div class="card mb-4">
+
+
+
+                                <div class="card mb-4" id="tbConfirmationCard">
                                     <div class="card-header">TB Confirmation</div>
                                     <div class="card-body">
+                                        {% for client_tb_confirmation_info in client_tb_confirmation %}
                                         <div class="row">
                                             <div class="col-sm-7">
                                                 <p class="mb-0">Is bat confirmed?</p>
@@ -501,28 +510,31 @@
                                             </div>
                                         </div>
                                         <hr>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% elif client_investigated_results %}
-                            <div class="card mb-4">
-                                <div class="card-header">TB Confirmation</div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-7">
-                                            <a class="btn btn-info"
-                                               href="{% url 'client_tb_confirmation' id=client.id %}">Add</a>
+                                        {% endfor %}
+                                        <div class="row last-row">
+                                            <div class="col-sm-7">
+                                                <!--<a class="btn btn-info"-->
+                                                <!--    href="{% url 'client_tb_confirmation' id=client.id %}">Add</a>-->
+                                                <button type="button"
+                                                    class="btn btn-info tbConfirmationModalButton"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#tbConfirmationModal"
+                                                    id="tbConfirmationModalButton"
+                                                    {% if client_tb_confirmation %}disabled{% endif %}>Add</button>
+                                            </div>
+                                            <div class="col-sm-5"></div>
                                         </div>
-                                        <div class="col-sm-5"></div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endif %}
-                        {% if client_tb_treatment %}
-                            {% for client_tb_treatment_info in client_tb_treatment %}
-                                <div class="card mb-4">
+
+
+
+
+
+                                <div class="card mb-4" id="tbTxCard">
                                     <div class="card-header">TB Treatment {{ forloop.counter }}</div>
                                     <div class="card-body">
+                                        {% for client_tb_treatment_info in client_tb_treatment %}
                                         <div class="row">
                                             <div class="col-sm-7">
                                                 <p class="mb-0">Is registered for Tx?</p>
@@ -550,23 +562,26 @@
                                             </div>
                                         </div>
                                         <hr>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% elif client_tb_confirmation %}
-                            <div class="card mb-4">
-                                <div class="card-header">TB Treatment {{ forloop.counter }}</div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-7">
-                                            <a class="btn btn-info"
-                                               href="{% url 'client_tb_treatment' id=client.id %}">Add</a>
+                                        {% endfor %}
+                                        <div class="row last-row">
+                                            <div class="col-sm-7">
+                                                <!--<a class="btn btn-info"-->
+                                                <!--    href="{% url 'client_tb_treatment' id=client.id %}">Add</a>-->
+                                                <button type="button"
+                                                    class="btn btn-info tbTxModalButton"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#tbTxModal"
+                                                    id="tbTxModalButton"
+                                                    {% if client_tb_treatment %}disabled{% endif %}>Add</button>
+                                            </div>
+                                            <div class="col-sm-5"></div>
                                         </div>
-                                        <div class="col-sm-5"></div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endif %}
+
+
+
+
                     </div>
                 </div>
             </div>
@@ -574,6 +589,13 @@
         {% include 'callcenter/add_user_info_modal_form.html' %}
         {% include 'callcenter/add_phone_modal_form.html' %}
         {% include 'callcenter/add_symptoms_by_call.html' %}
+        {% include 'callcenter/add_tb_referral_form.html' %}
+        {% include 'callcenter/add_social_platform_modal_form.html' %}
+        {% include 'callcenter/add_tb_referral_location_form.html' %}
+        {% include 'callcenter/add_reach_info_modal_form.html' %}
+        {% include 'callcenter/add_taken_investigation_modal_form.html' %}
+        {% include 'callcenter/add_tb_confirmation_modal_form.html' %}
+        {% include 'callcenter/add_tb_tx_modal_form.html' %}
     </main>
 {% endblock %}
 {% block js  %}

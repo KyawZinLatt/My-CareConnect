@@ -1,0 +1,32 @@
+<!-- Modal -->
+<div class="modal fade" id="tbReferralModal" tabindex="-1" aria-labelledby="tbReferralModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tbReferralModalLabel">TB Referral</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div id="tbReferralFormErrorMessage" class="alert alert-danger d-none"></div>
+        <form class="row g-3" id="tbReferralForm" data-client-id="{{ client.id }}">
+          <div class="mb-3">
+            <label for="willing_to_be_referred" class="form-label">Willing to be referred?</label>
+            <select name="willing_to_be_referred" class="form-select" required id="id_willing_to_be_referred">
+              <option value="" selected>Select Answer</option>
+              <option value="True">Yes</option>
+              <option value="False">No</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">Confirmed Name</label>
+            <input type="text" name="name" class="form-control" maxlength="100" required id="id_name">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" id="submitTbReferral">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

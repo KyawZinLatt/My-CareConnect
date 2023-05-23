@@ -1,0 +1,32 @@
+<!-- Modal -->
+<div class="modal fade" id="reachInfoModal" tabindex="-1" aria-labelledby="reachInfoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reachInfoModalLabel">Reach Info</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div id="reachInfoFormErrorMessage" class="alert alert-danger d-none"></div>
+        <form id="reachInfoForm" class="row g-3" data-client-id={{ client.id }}>
+          <div class="mb-3">
+            <label for="id_is_reach" class="form-label">Is reached to Referral Site?</label>
+            <select id="id_is_reach" class="form-select" name="is_reach">
+                <option value="" selected>Select Answer</option>
+                <option value="True">Yes</option>
+                <option value="False">No</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="id_reached_date" class="form-label">Reached Date</label>
+            <input type="date" id="id_reached_date" class="form-control" name="reached_date" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" id="submitReachInfo">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

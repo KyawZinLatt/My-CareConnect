@@ -1,0 +1,36 @@
+<!-- Modal -->
+<div class="modal fade" id="takenInvestigationModal" tabindex="-1" aria-labelledby="takenInvestigationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="takenInvestigationModalLabel">Taken Investigation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div id="takenInvestigationFormErrorMessage" class="alert alert-danger d-none"></div>
+        <form id="takenInvestigationForm" class="row g-3" data-client-id={{ client.id }}>
+          <div class="mb-3">
+            <label for="investigation-type-select" class="form-label">Investigation Type</label>
+            <select id="investigation-type-select" class="form-select" name="investigation_type">
+              <!-- Options will be populated dynamically -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="investigation-result-select" class="form-label">Investigation Result</label>
+            <select id="investigation-result-select" class="form-select" name="investigation_result">
+              <!-- Options will be populated dynamically -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="id_investigation_date" class="form-label">Investigation Date</label>
+            <input type="date" id="id_investigation_date" class="form-control" name="investigation_date" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" id="submitTakenInvestigation">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

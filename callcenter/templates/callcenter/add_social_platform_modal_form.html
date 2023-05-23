@@ -1,0 +1,45 @@
+<!-- Modal -->
+<div class="modal fade" id="socialPlatformModal" tabindex="-1" aria-labelledby="socialPlatformModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="socialPlatformModalLabel">Social Platforms</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div id="socialPlatformFormErrorMessage" class="alert alert-danger d-none"></div>
+        <form class="row g-3" id="socialPlatformForm" data-client-id={{ client.id }}>
+          
+          <div class="mb-3">
+            <label for="platform1" class="form-label">Viber</label>
+            <select name="platform1" class="form-select" required id="id_platform1">
+              <option value="" selected>Select Answer</option>
+              <option value="True">Yes</option>
+              <option value="False">No</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="platform2" class="form-label">Telegram</label>
+            <select name="platform2" class="form-select" required id="id_platform2">
+              <option value="" selected>Select Answer</option>
+              <option value="True">Yes</option>
+              <option value="False">No</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="platform3" class="form-label">Whatsapp</label>
+            <select name="platform3" class="form-select" required id="id_platform3">
+              <option value="" selected>Select Answer</option>
+              <option value="True">Yes</option>
+              <option value="False">No</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" id="submitSocialPlatform">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<!-- Modal -->
+<div class="modal fade" id="tbReferLocationModal" tabindex="-1" aria-labelledby="tbReferLocationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tbReferLocationModalLabel">TB Refer Location</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div id="tbReferLocationFormErrorMessage" class="alert alert-danger d-none"></div>
+        <form id="tbReferLocationForm" class="row g-3" data-client-id={{ client.id }}>
+          <div class="mb-3">
+            <label for="stateRegion" class="form-label">State Region</label>
+            <select id="stateRegion" class="form-select" name="stateRegion">
+                <option value="" selected>Select State Region</option>
+              <!-- Options will be populated dynamically -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="township" class="form-label">Township</label>
+            <select id="township" class="form-select" name="township">
+              <!-- Options will be populated dynamically -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="channel" class="form-label">Channel</label>
+            <select id="channel" class="form-select" name="channel">
+              <!-- Options will be populated dynamically -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="siteAddress" class="form-label">Site Address</label>
+            <select id="siteAddress" class="form-select" name="siteAddress">
+              <!-- Options will be populated dynamically -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="referDate" class="form-label">Refer Date</label>
+            <input type="date" id="referDate" class="form-control" name="referDate" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" id="submitTbReferLocation">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

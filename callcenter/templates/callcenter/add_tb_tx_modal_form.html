@@ -1,0 +1,40 @@
+<!-- Modal -->
+<div class="modal fade" id="tbTxModal" tabindex="-1" aria-labelledby="tbTxModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tbTxModalLabel">TB Treatment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div id="tbTxFormErrorMessage" class="alert alert-danger d-none"></div>
+        <form id="tbTxForm" class="row g-3" data-client-id={{ client.id }}>
+          <div class="mb-3">
+            <label for="id_is_registered_for_tx" class="form-label">Is registered for Tx?</label>
+            <select id="id_is_registered_for_tx" class="form-select" name="is_registered_for_tx">
+                <option value="" selected>Select Answer</option>
+                <option value="True">Yes</option>
+                <option value="False">No</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="id_registered_date" class="form-label">Register Date</label>
+            <input type="date" id="id_registered_date" class="form-control" name="registered_date" required>
+          </div>
+          <div class="mb-3">
+            <label for="id_tx_regime" class="form-label">Tx regime</label>
+            <select id="id_tx_regime" class="form-select" name="tx_regime">
+                <!--<option value="" selected>Select Answer</option>-->
+                <!--<option value="True">Yes</option>-->
+                <!--<option value="False">No</option>-->
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" id="submitTbTx">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal fade" id="symptomsModal" tabindex="-1" aria-labelledby="symptomsModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="symptomsModalLabel">Symptoms confirmed by call</h5>
@@ -8,7 +8,7 @@
       </div>
       <div class="modal-body">
           <div id="symptomsByCallFormErrorMessage" class="alert alert-danger d-none"></div>
-          <form id="symptomsByCallForm" data-client-id="{{ client.id }}">
+          <form class="row g-3" id="symptomsByCallForm" data-client-id="{{ client.id }}">
               <!-- Form goes here -->
               
           </form>

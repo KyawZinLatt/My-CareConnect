@@ -1,12 +1,12 @@
 from django.core.paginator import Paginator
-from django.db.models import F
+from django.db.models import F, Count
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from rest_framework import viewsets
 from rest_framework import permissions
 from .serializers import UserSerializer, GroupSerializer, ChatbotClientSerializer, ClientSerializer, ClientPhoneSerializer, ClientSymptomQuestionAnswerSerializer
 from django.contrib.auth.models import User, Group
-from callcenter.models import InvestigationResult, SiteLocation, ChatbotClient, Client, ClientPhone, ClientSymptomQuestionAnswer, Township
+from callcenter.models import TxRegime, InvestigationType, ClientRefRegLocation, InvestigationResult, SiteLocation, ChatbotClient, Client, ClientPhone, ClientSymptomQuestionAnswer, Township, StateRegion, Channel
 from django.views.generic.base import TemplateView
 from rest_framework import generics
 #from rest_framework.response import Response
@@ -16,6 +16,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import requests, json
 from django.db.models import Q
+from django.views.decorators.http import require_http_methods
+from datetime import datetime
+
 
 @login_required
 # def index(request):
@@ -450,6 +453,39 @@ def symptoms_confirmed_by_call(request, id):
     # if not a POST request, return a default response (you can modify this as needed)
     return JsonResponse({"message": "Invalid request method"})
 
+# @login_required
+# def refer_tb_client(request, id):
+#     client = get_object_or_404(Client, id=id)
+
+#     if request.method == 'POST':
+#         form = TBReferralForm(request.POST)
+#         if form.is_valid():
+#             # Process form data
+#             # name = form.cleaned_data['name']
+#             # email = form.cleaned_data['email']
+#             # message = form.cleaned_data['message']
+#             # can_contact = form.cleaned_data['can_contact']
+#             # age_range = form.cleaned_data['age_range']
+#             # hidden_client_id = form.cleaned_data['hidden_client_id']
+
+#             # print(can_contact)
+#             # print(age_range)
+#             # print(hidden_client_id)
+
+#             form.save(client=client)
+#             # Do something with the form data
+#             # ...
+#             # Redirect to success page
+#             return redirect('client_details', id=id)
+#         else:
+#             print(form.errors)
+#     else:
+#         #initial_values = {'hidden_client_id': id}
+#         form = TBReferralForm()
+
+#     return render(request, 'callcenter/client_tb_referral.html', {'form': form})
+
+
 @login_required
 def refer_tb_client(request, id):
     client = get_object_or_404(Client, id=id)
@@ -457,31 +493,45 @@ def refer_tb_client(request, id):
     if request.method == 'POST':
         form = TBReferralForm(request.POST)
         if form.is_valid():
-            # Process form data
-            # name = form.cleaned_data['name']
-            # email = form.cleaned_data['email']
-            # message = form.cleaned_data['message']
-            # can_contact = form.cleaned_data['can_contact']
-            # age_range = form.cleaned_data['age_range']
-            # hidden_client_id = form.cleaned_data['hidden_client_id']
-
-            # print(can_contact)
-            # print(age_range)
-            # print(hidden_client_id)
-
             form.save(client=client)
-            # Do something with the form data
-            # ...
-            # Redirect to success page
-            return redirect('client_details', id=id)
+            # Return a JSON response instead of a redirect
+            return JsonResponse({
+                'success': True,
+                'is_willing_to_be_referred': form.cleaned_data['willing_to_be_referred'],
+                'name': form.cleaned_data['name'],
+            })
         else:
-            print(form.errors)
-    else:
-        #initial_values = {'hidden_client_id': id}
-        form = TBReferralForm()
+            # If form is invalid, return a JSON response with an error message
+            return JsonResponse({
+                'success': False,
+                'error': form.errors,
+            })
 
-    return render(request, 'callcenter/client_tb_referral.html', {'form': form})
 
+
+
+# @login_required
+# def is_active_in_social_platforms(request,id):
+
+#     client = get_object_or_404(Client, id=id)
+
+
+
+#     if request.method == 'POST':
+#         form = ActiveSocialPlatformsForm(request.POST)
+#         if form.is_valid():
+
+#             form.save(client=client)
+
+#             # Redirect to success page
+#             return redirect('client_details', id=id)
+#         else:
+#             print(form.errors)
+#     else:
+#         #initial_values = {'hidden_client_id': id}
+#         form = ActiveSocialPlatformsForm()
+
+#     return render(request, 'callcenter/client_social_platforms.html', {'form': form})
 
 
 @login_required
@@ -497,16 +547,18 @@ def is_active_in_social_platforms(request,id):
 
             form.save(client=client)
 
-            # Redirect to success page
-            return redirect('client_details', id=id)
+            return JsonResponse({
+                'success': True,
+                'platform1': form.cleaned_data['platform1'],
+                'platform2': form.cleaned_data['platform2'],
+                'platform3': form.cleaned_data['platform3'],
+            })
         else:
-            print(form.errors)
-    else:
-        #initial_values = {'hidden_client_id': id}
-        form = ActiveSocialPlatformsForm()
-
-    return render(request, 'callcenter/client_social_platforms.html', {'form': form})
-
+            # If form is invalid, return a JSON response with an error message
+            return JsonResponse({
+                'success': False,
+                'error': form.errors,
+            })
 
 
 
@@ -559,43 +611,185 @@ def send_sms(api_endpoint=None, api_key=None, recipient=None, message=None):
 
 
 
+# @login_required
+# def refer_locations(request, id):
+
+#     client = get_object_or_404(Client, id=id)
+
+#     if request.method == 'POST':
+#         form = ReferLocationForm(request.POST)
+#         if form.is_valid():
+#             # state_region = form.cleaned_data['state_region']
+#             township = form.cleaned_data['township'].name_mm
+#             # location = Location.objects.create(country=country, city=city)
+#             site = form.cleaned_data['site'].site_address_mm
+#             clinic = form.cleaned_data['clinic'].clinic_name_mm
+#             # channel = form.cleaned_data['channel']
+#             # organization = form.cleaned_data['organization']
+#             # print(site)
+
+#             form.save(client=client)
+#             # if clinic:
+#             #     message = f"မင်္ဂလာပါရှင်၊ CareConnect ကပါ၊ ဆေးခန်းလိပ်စာကတော့ {clinic}ဆေးခန်း၊ {site}၊ {township}မြို့နယ်ပါရှင့်။ သာယာတဲ့နေ့လေးတစ်နေ့ဖြစ်ပါစေရှင့်။"
+#             # else:
+#             #     message = f"မင်္ဂလာပါရှင်၊ CareConnect ကပါ၊ ဆေးခန်းလိပ်စာကတော့ {site}၊ {township}မြို့နယ်ပါရှင့်။ သာယာတဲ့နေ့လေးတစ်နေ့ဖြစ်ပါစေရှင့်။"
+
+#             # send_sms(
+#             #     api_endpoint="https://smspoh.com/api/v2/send",
+#             #     api_key="UyiSZcmawREiHqngViqVgFavGuZKYawFBUYBZrsGqS7HWoxkqV5xtEixXNzvk5sP",
+#             #     recipient=client.clientphone_set.get(client=client,phone_type='1').phone_number,
+#             #     message=message
+#             # )
+
+#             # Redirect to the success page
+#             return redirect('client_details', id=id)
+#     else:
+#         form = ReferLocationForm()
+
+#     return render(request, 'callcenter/client_referred_location.html', {'form': form})
+
+
+# @login_required
+# def refer_locations(request, id):
+
+#     client = get_object_or_404(Client, id=id)
+
+#     if request.method == 'POST':
+#         form = ReferLocationForm(request.POST)
+#         if form.is_valid():
+
+#             result = form.save(client=client)
+#             id = form.cleaned_data['siteAddress'].value
+#             site = get_object_or_404(SiteLocation, id=id)
+
+#             return JsonResponse({
+#                 'success': True,
+#                 'state_region': site.state_region.name,
+#                 'township': site.township.name,
+#                 'channel': site.channel.name,
+#                 'org': site.organization.name,
+#                 'site_address': site.site_address,
+#                 'site_address_mm': site.site_address_mm,
+#                 'clinic_name': site.clinic_name,
+#                 'clinic_name_mm': site.clinic_name_mm,
+#                 'referred_date': result.action_date,
+#             })
+
+#         else:
+#             # If form is invalid, return a JSON response with an error message
+#             return JsonResponse({
+#                 'success': False,
+#                 'error': form.errors,
+#             })
+
+
+
+
 @login_required
 def refer_locations(request, id):
-
     client = get_object_or_404(Client, id=id)
-
     if request.method == 'POST':
-        form = ReferLocationForm(request.POST)
-        if form.is_valid():
-            # state_region = form.cleaned_data['state_region']
-            township = form.cleaned_data['township'].name_mm
-            # location = Location.objects.create(country=country, city=city)
-            site = form.cleaned_data['site'].site_address_mm
-            clinic = form.cleaned_data['clinic'].clinic_name_mm
-            # channel = form.cleaned_data['channel']
-            # organization = form.cleaned_data['organization']
-            # print(site)
 
-            form.save(client=client)
-            # if clinic:
-            #     message = f"မင်္ဂလာပါရှင်၊ CareConnect ကပါ၊ ဆေးခန်းလိပ်စာကတော့ {clinic}ဆေးခန်း၊ {site}၊ {township}မြို့နယ်ပါရှင့်။ သာယာတဲ့နေ့လေးတစ်နေ့ဖြစ်ပါစေရှင့်။"
-            # else:
-            #     message = f"မင်္ဂလာပါရှင်၊ CareConnect ကပါ၊ ဆေးခန်းလိပ်စာကတော့ {site}၊ {township}မြို့နယ်ပါရှင့်။ သာယာတဲ့နေ့လေးတစ်နေ့ဖြစ်ပါစေရှင့်။"
 
-            # send_sms(
-            #     api_endpoint="https://smspoh.com/api/v2/send",
-            #     api_key="UyiSZcmawREiHqngViqVgFavGuZKYawFBUYBZrsGqS7HWoxkqV5xtEixXNzvk5sP",
-            #     recipient=client.clientphone_set.get(client=client,phone_type='1').phone_number,
-            #     message=message
-            # )
+        # Manually validate the data
+        state_region = request.POST['stateRegion']
+        print(state_region)
+        township = request.POST['township']
+        print(township)
+        channel = request.POST['channel']
+        print(channel)
+        site_address = request.POST['siteAddress']
+        print(site_address)
+        refer_date = request.POST['referDate']
+        print(refer_date)
+        site = get_object_or_404(SiteLocation, id=site_address)
+        errors = {}
+        if not state_region:
+            errors['stateRegion'] = 'This field is required.'
+        if not township:
+            errors['township'] = 'This field is required.'
+        if not channel:
+            errors['channel'] = 'This field is required.'
+        if not site_address:
+            errors['siteAddress'] = 'This field is required.'
+        if not refer_date:
+            errors['referDate'] = 'This field is required.'
+        else:
+            try:
+                refer_date = datetime.strptime(refer_date, '%Y-%m-%d').date()
+            except ValueError:
+                errors['referDate'] = 'Invalid date format. Expected YYYY-MM-DD.'
 
-            # Redirect to the success page
-            return redirect('client_details', id=id)
-    else:
-        form = ReferLocationForm()
+        if errors:
+            return JsonResponse({'errors': errors}, status=400)
 
-    return render(request, 'callcenter/client_referred_location.html', {'form': form})
+        # If the data is valid, save a new ClientRefLocation
+        location = ClientRefRegLocation(
+            client=client,
+            site_location=site,
+            action_date=refer_date,
+            action_type='1'
+        )
+        print(f"{location.client.id},{location.site_location.site_address},{location.action_date},{location.action_type}")
+        location.save()
+        client.stage_id = 3
+        client.save()
 
+        return JsonResponse({
+            'success': True,
+            'message': 'TB Refer Location successfully created.',
+            'state_region': site.state_region.name,
+            'township': site.township.name,
+            'channel': site.channel.name,
+            'org': site.organization.name,
+            'clinic_name': site.clinic_name,
+            'clinic_name_mm': site.clinic_name_mm,
+            'site_address': site.site_address,
+            'site_address_mm': site.site_address_mm,
+            'referred_date': refer_date,
+        })
+
+    return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+
+
+
+
+
+@login_required
+def get_state_regions(request):
+    state_regions = StateRegion.objects.annotate(num_sites=Count('sitelocation')).filter(num_sites__gt=0).order_by('name')
+    response_data = list(state_regions.values('id', 'name'))
+    return JsonResponse(response_data, safe=False)
+
+@login_required
+def get_townships(request, state_region_id):
+    site_locations = SiteLocation.objects.filter(state_region_id=state_region_id)
+    townships = Township.objects.filter(id__in=site_locations.values('township')).order_by('name')
+    response_data = list(townships.values('id', 'name'))
+    return JsonResponse(response_data, safe=False)
+
+@login_required
+@require_http_methods(["GET"])
+def get_channels(request, township_id):
+    # Get the unique channels associated with the township in SiteLocation model
+    channels = Channel.objects.filter(sitelocation__township_id=township_id).distinct().order_by('name')
+
+    # Convert the queryset to a list of dictionaries
+    channels_list = list(channels.values('id', 'name'))
+
+    # Return the list as a JSON response
+    return JsonResponse(channels_list, safe=False)
+
+@login_required
+def get_site_addresses(request, state_region_id, township_id, channel_id):
+    site_addresses = SiteLocation.objects.filter(
+        state_region_id=state_region_id,
+        township_id=township_id,
+        channel_id=channel_id
+    ).values('id', 'site_address', 'site_address_mm', 'clinic_name', 'clinic_name_mm', 'organization__name')
+    site_address_list = list(site_addresses)
+    return JsonResponse(site_address_list, safe=False)
 
 @login_required
 def load_townships(request):
@@ -661,6 +855,21 @@ def add_additional_ph(request, id):
         return JsonResponse({"error": "Invalid request"})
 
 
+# @login_required
+# def reach_info(request, id):
+
+#     client = get_object_or_404(Client, id=id)
+
+#     if request.method == 'POST':
+#         form = ReachInfoForm(request.POST)
+#         if form.is_valid():
+#             form.save(client=client)
+#             return redirect('client_details', id=id)
+#     else:
+#         form = ReachInfoForm()
+
+#     return render(request, 'callcenter/client_reach_info.html', {'form':form})
+
 @login_required
 def reach_info(request, id):
 
@@ -670,12 +879,46 @@ def reach_info(request, id):
         form = ReachInfoForm(request.POST)
         if form.is_valid():
             form.save(client=client)
-            return redirect('client_details', id=id)
-    else:
-        form = ReachInfoForm()
+            return JsonResponse({
+                'success': True,
+                'is_reached': form.cleaned_data['is_reach'],
+                'reach_date': form.cleaned_data['reached_date'],
+            })
+        else:
+            # If form is invalid, return a JSON response with an error message
+            return JsonResponse({
+                'success': False,
+                'error': form.errors,
+            })
 
-    return render(request, 'callcenter/client_reach_info.html', {'form':form})
 
+@login_required
+def get_investigation_types(request):
+    investigation_types = InvestigationType.objects.all().order_by('type_description')
+    response_data = list(investigation_types.values('id', 'type_description'))
+    return JsonResponse(response_data, safe=False)
+
+@login_required
+def get_investigation_results(request, investigation_type_id):
+    investigation_results = InvestigationResult.objects.filter(investigation_type_id=investigation_type_id).order_by('result_description')
+    response_data = list(investigation_results.values('id', 'result_description'))
+    return JsonResponse(response_data, safe=False)
+
+
+# @login_required
+# def taken_investigations(request, id):
+
+#     client = get_object_or_404(Client, id=id)
+
+#     if request.method == 'POST':
+#         form = InvestigationForm(request.POST)
+#         if form.is_valid():
+#             form.save(client=client)
+#             return redirect('client_details', id=id)
+#     else:
+#         form = InvestigationForm()
+
+#     return render(request, 'callcenter/client_taken_investigations.html', {'form':form})
 
 @login_required
 def taken_investigations(request, id):
@@ -685,12 +928,21 @@ def taken_investigations(request, id):
     if request.method == 'POST':
         form = InvestigationForm(request.POST)
         if form.is_valid():
-            form.save(client=client)
-            return redirect('client_details', id=id)
+            result = form.save(client=client)
+            return JsonResponse({
+                'success': True,
+                'investigation_type': result.taken_investigation_type.type_description,
+                'investigation_result': result.taken_investigation_result.result_description,
+                'investigation_date': result.taken_investigation_date,
+            })
+        else:
+            # If form is invalid, return a JSON response with an error message
+            return JsonResponse({
+                'success': False,
+                'error': form.errors,
+            })
     else:
-        form = InvestigationForm()
-
-    return render(request, 'callcenter/client_taken_investigations.html', {'form':form})
+        return JsonResponse({"error": "Invalid request"})
 
 
 @login_required
@@ -708,13 +960,46 @@ def tb_confirmation(request, id):
     if request.method == 'POST':
         form = TBConfirmationForm(request.POST)
         if form.is_valid():
-            form.save(client=client)
-            return redirect('client_details', id=id)
+            result = form.save(client=client)
+            return JsonResponse({
+                'success': True,
+                'is_bat_confirmed': result.is_bat_confirmed,
+                'tb_diagnosis': result.tb_diagnosis,
+                'diagnosis_date': result.diagnosis_date,
+            })
+        else:
+            # If form is invalid, return a JSON response with an error message
+            return JsonResponse({
+                'success': False,
+                'error': form.errors,
+            })
 
     else:
-        form = TBConfirmationForm()
+        return JsonResponse({"error": "Invalid request"})
 
-    return render(request, 'callcenter/client_tb_confirmation.html', {'form':form})
+
+@login_required
+def get_tb_regimes(request):
+    regimes = TxRegime.objects.filter(is_active=True)
+    response_data = list(regimes.values('id', 'type'))
+    return JsonResponse(response_data, safe=False)
+
+
+# @login_required
+# def tb_treatment(request, id):
+
+#     client = get_object_or_404(Client, id=id)
+
+#     if request.method == 'POST':
+#         form = TBTreatmentForm(request.POST)
+#         if form.is_valid():
+#             form.save(client=client)
+#             return redirect('client_details', id=id)
+
+#     else:
+#         form = TBTreatmentForm()
+
+#     return render(request, 'callcenter/client_tb_treatment.html', {'form':form})
 
 
 @login_required
@@ -725,13 +1010,22 @@ def tb_treatment(request, id):
     if request.method == 'POST':
         form = TBTreatmentForm(request.POST)
         if form.is_valid():
-            form.save(client=client)
-            return redirect('client_details', id=id)
+            result = form.save(client=client)
+            return JsonResponse({
+                'success': True,
+                'is_registered_for_tx': result.is_registered_for_tx,
+                'tx_regime': result.tx_regime.type,
+                'registered_date': result.registered_date,
+            })
+        else:
+            # If form is invalid, return a JSON response with an error message
+            return JsonResponse({
+                'success': False,
+                'error': form.errors,
+            })
 
     else:
-        form = TBTreatmentForm()
-
-    return render(request, 'callcenter/client_tb_treatment.html', {'form':form})
+        return JsonResponse({"error": "Invalid request"})
 
 
 # def load_channel(request):

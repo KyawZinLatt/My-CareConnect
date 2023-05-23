@@ -4,6 +4,7 @@ from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInp
 from django.forms.widgets import TextInput, Textarea
 from callcenter.models import TxRegime, ClientTBTreatment, ClientTBConfirmation, ClientInvestigatedResult, InvestigationResult, InvestigationType, ClientReachInfo, ClientPhone, StateRegion, Township, Client, TBReferralClient, SymptomQuestion, ClientSymptomQuestionAnswer, Stage, ClientTBReferral, SocialPlatform, ClientSocialPlatform, ClientRefRegLocation, SiteLocation
 #from django_bootstrap5.widgets import BootstrapTextInput, BootstrapTextarea
+from django.db.models import Q
 
 
 class StageFilterForm(forms.Form):
@@ -234,97 +235,171 @@ class ActiveSocialPlatformsForm(forms.Form):
 
 
 
+# class ReferLocationForm(forms.Form):
+
+#     stage_region_id_list = list(SiteLocation.objects.filter(is_active=True).values_list("state_region_id",flat=True).distinct())
+#     unique_active_states_regions = SiteLocation.objects.filter(is_active=True).values_list("state_region_id","state_region__name").distinct()
+
+
+#     #refer_date = forms.DateField(label="Refer Date", required=True, widget=forms.DateInput(attrs={'class': 'form-control','type': 'date',}))
+#     refer_date = forms.DateField(
+#         label="Refer Date",
+#         required=True,
+#         widget=DatePickerInput(
+#             attrs = {'class': 'form-control'},
+#             options={
+#                 "format": "DD/MMM/YYYY",
+#                 "showClose": True,
+#                 "showClear": True,
+#                 "showTodayButton": True,
+#                 "allowInputToggle": True
+#             }
+#         )
+#     )
+
+#     state_region = forms.ModelChoiceField(
+#         label="State Region",
+#         queryset=StateRegion.objects.filter(id__in=stage_region_id_list).order_by('name'),
+#             widget=forms.Select(
+#                 attrs={
+#                     'class': 'form-control',
+#                     'id': 'state-region-select',
+#                 }
+#             )
+#     )
+#     #state_region = forms.ModelChoiceField(label="State Region",queryset=SiteLocation.objects.filter(is_active=True),widget=forms.Select(attrs={'class': 'form-control','id': 'state-region-select',}))
+#     township = forms.ModelChoiceField(
+#         queryset=Township.objects.none(),
+#         widget=forms.Select(
+#             attrs={
+#                 'class': 'form-control',
+#                 'id': 'township-select',
+#             }
+#         )
+#     )
+#     #township = forms.ModelChoiceField(label="Township",queryset=SiteLocation.objects.none(),widget=forms.Select(attrs={'class': 'form-control','id': 'township-select',}))
+#     site = forms.ModelChoiceField(label="Site Address",queryset=SiteLocation.objects.none(),widget=forms.Select(attrs={'class': 'form-control','id': 'site-select',}))
+#     clinic = forms.ModelChoiceField(label="Clinic Name",queryset=SiteLocation.objects.none(),widget=forms.Select(attrs={'class': 'form-control','id': 'clinic-select',}))
+#     channel = forms.ModelChoiceField(label="Channel",queryset=SiteLocation.objects.none(),widget=forms.Select(attrs={'class': 'form-control','id': 'channel-select',}))
+#     organization = forms.ModelChoiceField(label="Organization",queryset=SiteLocation.objects.none(),widget=forms.Select(attrs={'class': 'form-control','id': 'organization-select',}))
+
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         #print(self.instance)
+#         if 'state_region' in self.data:
+#             try:
+#                 state_region_id = int(self.data.get('state_region'))
+#                 #print(f"this is state_region_id kyaw -> {state_region_id}")
+#                 self.fields['township'].queryset = Township.objects.filter(state_region_id=state_region_id).order_by('name')
+#             except (ValueError, TypeError):
+#                 pass
+#         if 'township' in self.data:
+#             try:
+#                 state_region_id = int(self.data.get('state_region'))
+#                 township_id = int(self.data.get('township'))
+#                 #print(f"this is township_id kyaw -> {township_id}")
+#                 self.fields['site'].queryset = SiteLocation.objects.filter(state_region_id=state_region_id,township_id=township_id)
+#             except (ValueError, TypeError):
+#                 pass
+#         if 'site' in self.data:
+#             try:
+#                 site_id = int(self.data.get('site'))
+#                 #print(f"this is township_id kyaw -> {township_id}")
+#                 self.fields['clinic'].queryset = SiteLocation.objects.filter(id=site_id)
+#             except (ValueError, TypeError):
+#                 pass
+#         if 'clinic' in self.data:
+#             try:
+#                 site_id = int(self.data.get('clinic'))
+#                 #print(f"this is township_id kyaw -> {township_id}")
+#                 self.fields['channel'].queryset = SiteLocation.objects.filter(id=site_id)
+#             except (ValueError, TypeError):
+#                 pass
+#         if 'channel' in self.data:
+#             try:
+#                 site_id = int(self.data.get('channel'))
+#                 #print(f"this is township_id kyaw -> {township_id}")
+#                 self.fields['organization'].queryset = SiteLocation.objects.filter(id=site_id)
+#             except (ValueError, TypeError):
+#                 pass
+
+#     def save(self, client=None):
+#         site_id = self.cleaned_data['site'].id
+#         print(f'type is ----> {type(site_id)}')
+#         site_location = SiteLocation.objects.get(id=site_id)
+#         client_ref_data = {
+#             'site_location': site_location,
+#             'client': client,
+#             'action_date': self.cleaned_data['refer_date'],
+#             'action_type': '1'
+#         }
+#         ClientRefRegLocation.objects.create(**client_ref_data)
+#         client.stage_id = 3
+#         client.save()
+
+
+
 class ReferLocationForm(forms.Form):
-
-    stage_region_id_list = list(SiteLocation.objects.filter(is_active=True).values_list("state_region_id",flat=True).distinct())
-    unique_active_states_regions = SiteLocation.objects.filter(is_active=True).values_list("state_region_id","state_region__name").distinct()
-
-
-    #refer_date = forms.DateField(label="Refer Date", required=True, widget=forms.DateInput(attrs={'class': 'form-control','type': 'date',}))
-    refer_date = forms.DateField(
-        label="Refer Date",
-        required=True,
-        widget=DatePickerInput(
-            attrs = {'class': 'form-control'},
-            options={
-                "format": "DD/MMM/YYYY",
-                "showClose": True,
-                "showClear": True,
-                "showTodayButton": True,
-                "allowInputToggle": True
-            }
-        )
-    )
-
     state_region = forms.ModelChoiceField(
         label="State Region",
-        queryset=StateRegion.objects.filter(id__in=stage_region_id_list).order_by('name'),
-            widget=forms.Select(
-                attrs={
-                    'class': 'form-control',
-                    'id': 'state-region-select',
-                }
-            )
+        queryset=StateRegion.objects.all().order_by('name'),
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'stateRegion', 'name': 'stateRegion'}),
+        empty_label="Select State Region"
     )
-    #state_region = forms.ModelChoiceField(label="State Region",queryset=SiteLocation.objects.filter(is_active=True),widget=forms.Select(attrs={'class': 'form-control','id': 'state-region-select',}))
+
     township = forms.ModelChoiceField(
         queryset=Township.objects.none(),
-        widget=forms.Select(
-            attrs={
-                'class': 'form-control',
-                'id': 'township-select',
-            }
-        )
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'township', 'name': 'township'}),
+        required=False
     )
-    #township = forms.ModelChoiceField(label="Township",queryset=SiteLocation.objects.none(),widget=forms.Select(attrs={'class': 'form-control','id': 'township-select',}))
-    site = forms.ModelChoiceField(label="Site Address",queryset=SiteLocation.objects.none(),widget=forms.Select(attrs={'class': 'form-control','id': 'site-select',}))
-    clinic = forms.ModelChoiceField(label="Clinic Name",queryset=SiteLocation.objects.none(),widget=forms.Select(attrs={'class': 'form-control','id': 'clinic-select',}))
-    channel = forms.ModelChoiceField(label="Channel",queryset=SiteLocation.objects.none(),widget=forms.Select(attrs={'class': 'form-control','id': 'channel-select',}))
-    organization = forms.ModelChoiceField(label="Organization",queryset=SiteLocation.objects.none(),widget=forms.Select(attrs={'class': 'form-control','id': 'organization-select',}))
+
+    channel = forms.ModelChoiceField(
+        queryset=SiteLocation.objects.none(),
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'channel', 'name': 'channel'}),
+        required=False
+    )
+
+    site = forms.ModelChoiceField(
+        queryset=SiteLocation.objects.none(),
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'siteAddress', 'name': 'siteAddress'}),
+        required=False,
+        label="Site Address"
+    )
+
+    refer_date = forms.DateField(
+        widget=forms.DateInput(attrs={'class': 'form-control', 'id': 'referDate', 'name': 'referDate', 'required': 'true'}),
+        required=False,
+        label="Refer Date"
+    )
+
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        #print(self.instance)
         if 'state_region' in self.data:
             try:
                 state_region_id = int(self.data.get('state_region'))
-                #print(f"this is state_region_id kyaw -> {state_region_id}")
                 self.fields['township'].queryset = Township.objects.filter(state_region_id=state_region_id).order_by('name')
             except (ValueError, TypeError):
                 pass
+
         if 'township' in self.data:
             try:
                 state_region_id = int(self.data.get('state_region'))
                 township_id = int(self.data.get('township'))
-                #print(f"this is township_id kyaw -> {township_id}")
                 self.fields['site'].queryset = SiteLocation.objects.filter(state_region_id=state_region_id,township_id=township_id)
             except (ValueError, TypeError):
                 pass
+
         if 'site' in self.data:
             try:
                 site_id = int(self.data.get('site'))
-                #print(f"this is township_id kyaw -> {township_id}")
-                self.fields['clinic'].queryset = SiteLocation.objects.filter(id=site_id)
-            except (ValueError, TypeError):
-                pass
-        if 'clinic' in self.data:
-            try:
-                site_id = int(self.data.get('clinic'))
-                #print(f"this is township_id kyaw -> {township_id}")
                 self.fields['channel'].queryset = SiteLocation.objects.filter(id=site_id)
-            except (ValueError, TypeError):
-                pass
-        if 'channel' in self.data:
-            try:
-                site_id = int(self.data.get('channel'))
-                #print(f"this is township_id kyaw -> {township_id}")
-                self.fields['organization'].queryset = SiteLocation.objects.filter(id=site_id)
             except (ValueError, TypeError):
                 pass
 
     def save(self, client=None):
         site_id = self.cleaned_data['site'].id
-        print(f'type is ----> {type(site_id)}')
         site_location = SiteLocation.objects.get(id=site_id)
         client_ref_data = {
             'site_location': site_location,
@@ -337,6 +412,7 @@ class ReferLocationForm(forms.Form):
         client.save()
 
 
+
 class ReachInfoForm(forms.Form):
     is_reach = forms.ChoiceField(
         label = "Is reached to Referral Site?",
@@ -345,19 +421,24 @@ class ReachInfoForm(forms.Form):
         widget = forms.Select(attrs={'class': 'form-control'})
     )
 
+    # reached_date = forms.DateField(
+    #     label="Reached Date",
+    #     required=True,
+    #     widget=DatePickerInput(
+    #         attrs={'class': 'form-control'},
+    #         options={
+    #             "format": "DD/MMM/YYYY",
+    #             "showClose": True,
+    #             "showClear": True,
+    #             "showTodayButton": True,
+    #             "allowInputToggle": True
+    #         }
+    #     )
+    # )
+
     reached_date = forms.DateField(
         label="Reached Date",
         required=True,
-        widget=DatePickerInput(
-            attrs={'class': 'form-control'},
-            options={
-                "format": "DD/MMM/YYYY",
-                "showClose": True,
-                "showClear": True,
-                "showTodayButton": True,
-                "allowInputToggle": True
-            }
-        )
     )
 
     def save(self, client=None):
@@ -397,19 +478,25 @@ class InvestigationForm(forms.Form):
             )
     )
 
+    # investigation_date = forms.DateField(
+    #     label="Investigation Date",
+    #     required=True,
+    #     widget=DatePickerInput(
+    #         attrs={'class': 'form-control'},
+    #         options={
+    #             "format": "DD/MMM/YYYY",
+    #             "showClose": True,
+    #             "showClear": True,
+    #             "showTodayButton": True,
+    #             "allowInputToggle": True
+    #         }
+    #     )
+    # )
+
     investigation_date = forms.DateField(
         label="Investigation Date",
         required=True,
-        widget=DatePickerInput(
-            attrs={'class': 'form-control'},
-            options={
-                "format": "DD/MMM/YYYY",
-                "showClose": True,
-                "showClear": True,
-                "showTodayButton": True,
-                "allowInputToggle": True
-            }
-        )
+
     )
 
     def __init__(self, *args, **kwargs):
@@ -431,17 +518,17 @@ class InvestigationForm(forms.Form):
             'taken_investigation_result': self.cleaned_data['investigation_result'],
             'taken_investigation_date': self.cleaned_data['investigation_date'],
         }
-        ClientInvestigatedResult.objects.create(**investigation_data)
+        return ClientInvestigatedResult.objects.create(**investigation_data)
 
 
 class TBConfirmationForm(forms.Form):
 
-    bat_confirmed = forms.ChoiceField(
-        label="Is bat confirmed?",
-        choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')),
-        required=True,
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )
+    # bat_confirmed = forms.ChoiceField(
+    #     label="Is bat confirmed?",
+    #     choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')),
+    #     required=True,
+    #     widget=forms.Select(attrs={'class': 'form-control'})
+    # )
 
     tb_diagnosis = forms.ChoiceField(
         label="TB Diagnosis",
@@ -450,50 +537,78 @@ class TBConfirmationForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
-    diagnosis_date = forms.DateField(
-        label="Diagnosis Date",
-        required=True,
-        widget=DatePickerInput(
-            attrs={'class': 'form-control'},
-            options={
-                "format": "DD/MMM/YYYY",
-                "showClose": True,
-                "showClear": True,
-                "showTodayButton": True,
-                "allowInputToggle": True
-            }
-        )
-    )
+    # diagnosis_date = forms.DateField(
+    #     label="Diagnosis Date",
+    #     required=True,
+    #     widget=DatePickerInput(
+    #         attrs={'class': 'form-control'},
+    #         options={
+    #             "format": "DD/MMM/YYYY",
+    #             "showClose": True,
+    #             "showClear": True,
+    #             "showTodayButton": True,
+    #             "allowInputToggle": True
+    #         }
+    #     )
+    # )
+
+    # diagnosis_date = forms.DateField(
+    #     label="Diagnosis Date",
+    #     required=True,
+
+    # )
 
     def save(self, client=None):
+        results_queryset = ClientInvestigatedResult.objects.filter(client=client)
+        positive_results = results_queryset.filter(taken_investigation_result__result_type='Positive')
+        earliest_positive_result = positive_results.order_by('taken_investigation_date').first()
+        bat_confirm = positive_results.filter(Q(taken_investigation_type__type_description='Gene Xpert') | Q(taken_investigation_type__type_description='Sputum Examination'))
+
+
+        bat_confirm_result = False
+        if (bat_confirm):
+            bat_confirm_result = True
+
+        diagnosis_date = None
+        if (earliest_positive_result):
+            diagnosis_date = earliest_positive_result.taken_investigation_date
+
         tb_confirm_data = {
-        'is_bat_confirmed': self.cleaned_data['bat_confirmed'],
+        # 'is_bat_confirmed': self.cleaned_data['bat_confirmed'],
+        'is_bat_confirmed': bat_confirm_result,
         'tb_diagnosis': self.cleaned_data['tb_diagnosis'],
         'client': client,
-        'diagnosis_date': self.cleaned_data['diagnosis_date'],
+        # 'diagnosis_date': self.cleaned_data['diagnosis_date'],
+        'diagnosis_date': diagnosis_date,
         }
-        ClientTBConfirmation.objects.create(**tb_confirm_data)
+        result = ClientTBConfirmation.objects.create(**tb_confirm_data)
         client.stage_id = 5
         client.save()
-
+        return result
 
 
 class TBTreatmentForm(forms.Form):
 
 
+    # registered_date = forms.DateField(
+    #     label="Register Date",
+    #     required=True,
+    #     widget=DatePickerInput(
+    #         attrs = {'class': 'form-control'},
+    #         options={
+    #             "format": "DD/MMM/YYYY",
+    #             "showClose": True,
+    #             "showClear": True,
+    #             "showTodayButton": True,
+    #             "allowInputToggle": True
+    #         }
+    #     )
+    # )
+
     registered_date = forms.DateField(
         label="Register Date",
         required=True,
-        widget=DatePickerInput(
-            attrs = {'class': 'form-control'},
-            options={
-                "format": "DD/MMM/YYYY",
-                "showClose": True,
-                "showClear": True,
-                "showTodayButton": True,
-                "allowInputToggle": True
-            }
-        )
+
     )
 
     is_registered_for_tx = forms.ChoiceField(
@@ -514,7 +629,7 @@ class TBTreatmentForm(forms.Form):
         label="Tx regime",
         required=True,
         queryset=TxRegime.objects.filter(is_active=True),
-        widget=forms.Select(attrs={'class': 'form-control','id': 'site-select',})
+        widget=forms.Select(attrs={'class': 'form-control','id': 'id_tx_regime',})
     )
 
 
@@ -525,9 +640,10 @@ class TBTreatmentForm(forms.Form):
         'tx_regime': self.cleaned_data['tx_regime'],
         'registered_date': self.cleaned_data['registered_date'],
         }
-        ClientTBTreatment.objects.create(**register_data)
+        result = ClientTBTreatment.objects.create(**register_data)
         client.stage_id = 6
         client.save()
+        return result
 
 
 # class PhoneInput(forms.widgets.TextInput):

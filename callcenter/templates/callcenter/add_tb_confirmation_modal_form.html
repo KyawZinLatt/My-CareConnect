@@ -1,0 +1,32 @@
+<!-- Modal -->
+<div class="modal fade" id="tbConfirmationModal" tabindex="-1" aria-labelledby="tbConfirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tbConfirmationModalLabel">TB Confirmation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div id="tbConfirmationFormErrorMessage" class="alert alert-danger d-none"></div>
+        <form id="tbConfirmationForm" class="row g-3" data-client-id={{ client.id }}>
+          <div class="mb-3">
+            <label for="id_tb_diagnosis" class="form-label">TB Diagnosis</label>
+            <select id="id_tb_diagnosis" class="form-select" name="tb_diagnosis">
+                <option value="" selected>Select Answer</option>
+                <option value="Positive">Positive</option>
+                <option value="Negative">Negative</option>
+            </select>
+          </div>
+          <!--<div class="mb-3">-->
+          <!--  <label for="id_diagnosis_date" class="form-label">Diagnosis Date</label>-->
+          <!--  <input type="date" id="id_diagnosis_date" class="form-control" name="diagnosis_date" required>-->
+          <!--</div>-->
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" id="submitTbConfirmation">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
