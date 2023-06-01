@@ -1034,8 +1034,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-7">
-                                            // <a class="btn btn-info"
-                                            //   href="{% url 'client_ref_locations' id=client.id %}">Add</a>
+                                            
                                             <!-- Button trigger modal -->
                                             <button type="button" 
                                                 class="btn btn-info tbReferLocationModalButton" 

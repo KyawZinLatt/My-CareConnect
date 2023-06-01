@@ -7,7 +7,7 @@
             <div class="container py-5">
                 <div class="row">
                     <div class="col-lg-4">
-                        <div class="card mb-4">
+                        <div class="card mb-4" style="position: sticky; top: 0;">
                             <div class="card-body text-center">
                                 <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
                                      alt="avatar"
@@ -183,7 +183,7 @@
                                                 class="btn btn-info"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#symptomsModal"
-                                                {% if client_call_symptoms_questions_answers %}disabled{% endif %}>
+                                                {% if not tb_referral_client %}disabled{% elif client_call_symptoms_questions_answers %}disabled{% endif %}>
                                             Add
                                         </button>
                                     </div>

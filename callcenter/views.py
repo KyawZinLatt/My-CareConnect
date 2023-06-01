@@ -42,7 +42,7 @@ def index(request):
     if query:
         filter_conditions &= Q(phone_number__icontains=query)
 
-    client_phones = ClientPhone.objects.select_related('client').filter(filter_conditions).order_by('phone_number')
+    client_phones = ClientPhone.objects.select_related('client').filter(filter_conditions).order_by('created_datetime','phone_number')
 
     # Pagination
     paginator = Paginator(client_phones, 10)  # Show 10 clients per page
