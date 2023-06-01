@@ -151,7 +151,10 @@ class SiteLocation(BaseModel):
     clinic_name_mm = models.CharField(max_length=255,null=True,blank=True)
     site_address = models.CharField(max_length=255,null=False)
     site_address_mm = models.CharField(max_length=255,null=True)
+    provider_name = models.CharField(max_length=255,null=True)
+    provider_name_mm = models.CharField(max_length=255,null=True)
     site_type = models.CharField(max_length=255,null=False,choices=SITE_TYPE_CHOICE)
+
 
     class Meta:
         verbose_name_plural = "08. SiteLocations"
