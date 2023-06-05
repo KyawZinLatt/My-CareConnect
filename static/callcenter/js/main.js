@@ -1565,13 +1565,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Get the parent element
                     let parentElement = document.querySelector('#tbConfirmationCard .card-body');
 
-                    // Create and append new elements for 'Is bat confirmed?'
+                    // Create and append new elements for 'Is bact confirmed?'
                     let row1 = document.createElement('div');
                     row1.classList.add('row');
 
                     let col1a = document.createElement('div');
                     col1a.classList.add('col-sm-7');
-                    col1a.innerHTML = '<p class="mb-0">Is bat confirmed?</p>';
+                    col1a.innerHTML = '<p class="mb-0">Is bact confirmed?</p>';
                     row1.appendChild(col1a);
 
                     let col1b = document.createElement('div');
@@ -1749,34 +1749,49 @@ document.addEventListener('DOMContentLoaded', () => {
                     row1.appendChild(col1b);
 
 
-                    // Create and append new elements for 'TB Regime'
+                    // Create and append new elements for 'Is same as referred site?'
                     let row2 = document.createElement('div');
                     row2.classList.add('row');
 
                     let col2a = document.createElement('div');
                     col2a.classList.add('col-sm-7');
-                    col2a.innerHTML = '<p class="mb-0">TB Regime</p>';
+                    col2a.innerHTML = '<p class="mb-0">Is same as referred site?</p>';
                     row2.appendChild(col2a);
 
                     let col2b = document.createElement('div');
                     col2b.classList.add('col-sm-5');
-                    col2b.innerHTML = `<p class="text-muted mb-0">${data.tx_regime}</p>`;
+                    col2b.innerHTML = `<p class="text-muted mb-0">${data.is_same_as_referred_site}</p>`;
                     row2.appendChild(col2b);
 
 
-                    // Create and append new elements for 'TB Register Date'
+                    // Create and append new elements for 'TB Regime'
                     let row3 = document.createElement('div');
                     row3.classList.add('row');
 
                     let col3a = document.createElement('div');
                     col3a.classList.add('col-sm-7');
-                    col3a.innerHTML = '<p class="mb-0">TB Register Date</p>';
+                    col3a.innerHTML = '<p class="mb-0">TB Regime</p>';
                     row3.appendChild(col3a);
 
                     let col3b = document.createElement('div');
                     col3b.classList.add('col-sm-5');
-                    col3b.innerHTML = `<p class="text-muted mb-0">${data.registered_date}</p>`;
+                    col3b.innerHTML = `<p class="text-muted mb-0">${data.tx_regime}</p>`;
                     row3.appendChild(col3b);
+
+
+                    // Create and append new elements for 'TB Register Date'
+                    let row4 = document.createElement('div');
+                    row4.classList.add('row');
+
+                    let col4a = document.createElement('div');
+                    col4a.classList.add('col-sm-7');
+                    col4a.innerHTML = '<p class="mb-0">TB Register Date</p>';
+                    row4.appendChild(col4a);
+
+                    let col4b = document.createElement('div');
+                    col4b.classList.add('col-sm-5');
+                    col4b.innerHTML = `<p class="text-muted mb-0">${data.registered_date}</p>`;
+                    row4.appendChild(col4b);
 
 
 
@@ -1789,6 +1804,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     parentElement.insertBefore(row2, refNode);
                     parentElement.insertBefore(document.createElement('hr'), refNode);
                     parentElement.insertBefore(row3, refNode);
+                    parentElement.insertBefore(document.createElement('hr'), refNode);
+                    parentElement.insertBefore(row4, refNode);
                     parentElement.insertBefore(document.createElement('hr'), refNode);
 
                     let tbTxModalButton = document.getElementById('tbTxModalButton');

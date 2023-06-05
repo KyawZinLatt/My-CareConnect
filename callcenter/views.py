@@ -1041,6 +1041,7 @@ def tb_treatment(request, id):
                 'is_registered_for_tx': result.is_registered_for_tx,
                 'tx_regime': result.tx_regime.type,
                 'registered_date': result.registered_date,
+                'is_same_as_referred_site': result.is_same_as_referred_site
             })
         else:
             # If form is invalid, return a JSON response with an error message

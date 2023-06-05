@@ -611,6 +611,11 @@ class TBTreatmentForm(forms.Form):
 
     )
 
+    is_same_as_referred_site = forms.ChoiceField(
+        required=True,
+        choices=(('', 'Select Answer'), (True, 'Yes'), (False, 'No')),
+    )
+
     is_registered_for_tx = forms.ChoiceField(
         label="Is registered for Tx?",
         required=True,
@@ -639,6 +644,7 @@ class TBTreatmentForm(forms.Form):
         'is_registered_for_tx': self.cleaned_data['is_registered_for_tx'],
         'tx_regime': self.cleaned_data['tx_regime'],
         'registered_date': self.cleaned_data['registered_date'],
+        'is_same_as_referred_site': self.cleaned_data['is_same_as_referred_site']
         }
         result = ClientTBTreatment.objects.create(**register_data)
         client.stage_id = 6
