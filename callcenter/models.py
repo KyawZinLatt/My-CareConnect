@@ -233,6 +233,7 @@ class TxRegime(BaseModel):
 class ClientTBTreatment(BaseModel):
     client = models.ForeignKey(Client,on_delete=models.PROTECT)
     is_registered_for_tx = models.BooleanField()
+    is_same_as_referred_site = models.BooleanField(null=True)
     # tx_regime = models.CharField(max_length=255,null=False)
     tx_regime = models.ForeignKey(TxRegime,on_delete=models.PROTECT)
     registered_date = models.DateField(null=False,default=timezone.now)
