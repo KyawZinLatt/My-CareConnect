@@ -150,12 +150,12 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 console.log(data)
                 if (data.success) {
-                    
-                    
-                    
+
+
+
                     console.log("Form submitted successfully.");
-                    
-                    
+
+
 
                     // If the form was submitted successfully, hide the error message
                     errorMessageElement.classList.add('d-none');
@@ -228,6 +228,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     let userInfoModalButton = document.getElementById('userInfoModalButton');
                     // Disable the modal trigger button
                     userInfoModalButton.disabled = true;
+
+                    let symptomsModalButton = document.getElementById('symptomsModalButton');
+                    symptomsModalButton.disabled = false;
 
                 } else {
                     console.log("Form submission failed.");
@@ -875,7 +878,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fetch(`/site_addresses/${stateRegionID}/${townshipID}/${channelID}/`)
                 .then(response => response.json())
                 .then(data => {
-
+                    console.log(data);
                     const siteAddressDropdown = document.getElementById('siteAddress');
                     // Remove existing options
                     while (siteAddressDropdown.firstChild) {
@@ -884,7 +887,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     siteAddressDropdown.innerHTML = '<option value="" selected>Select Site</option>';
                     let optionHTML = "";
                     for (let siteLocation of data) {
-                        optionHTML += `<option value="${siteLocation.id}">${siteLocation.site_address}, ${siteLocation.site_address_mm}, ${siteLocation.clinic_name}, ${siteLocation.clinic_name_mm}, ${siteLocation.organization_name}</option>`;
+                        optionHTML += `<option value="${siteLocation.id}">${siteLocation.site_address}, ${siteLocation.site_address_mm}, ${siteLocation.clinic_name}, ${siteLocation.clinic_name_mm}, ${siteLocation.organization__name}</option>`;
                     }
                     siteAddressDropdown.innerHTML += optionHTML;
                 });
@@ -910,7 +913,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             }
         }
-        
+
         let errorMessageElement = document.getElementById('tbReferLocationFormErrorMessage');
         if (!isFormValid) {
             errorMessageElement.textContent = 'Please fill out all fields.';
@@ -1015,6 +1018,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         `;
                     }
 
+                    if (data.provider_name) {
+
+                        newCard += `
+                                            <div class="row">
+                                                <div class="col-sm-7">
+                                                    <p class="mb-0">Provider Name</p>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <p class="text-muted mb-0">
+                                                        ${data.provider_name} ${data.provider_name_mm}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <hr>
+                        `;
+                    }
+
 
                     newCard += `
                                         <div class="row">
@@ -1026,7 +1046,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                             </div>
                                         </div>
                                         <hr>
-                                        
+
                                     </div>
                                 </div>
                                 <div class="card mb-4">
@@ -1034,19 +1054,19 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-7">
-                                            
+
                                             <!-- Button trigger modal -->
-                                            <button type="button" 
-                                                class="btn btn-info tbReferLocationModalButton" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#tbReferLocationModal" 
+                                            <button type="button"
+                                                class="btn btn-info tbReferLocationModalButton"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#tbReferLocationModal"
                                                 id="tbReferLocationModalButton">Add</button>
                                         </div>
                                         <div class="col-sm-5"></div>
                                     </div>
                                 </div>
                             </div>
-                                
+
                     `;
 
 
@@ -1075,13 +1095,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         //     console.log(previousCardButton);
                         //     if (previousCardButton) {
                         //         previousCardButton.style.display = 'none';
-                        //     }  
+                        //     }
                         // }
-                        
+
                     } else {
                         console.error("Couldn't find a card containing the button!");
                     }
-                    
+
 
 
                 } else {
@@ -1109,8 +1129,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('tbReferLocationFormErrorMessage').classList.remove('d-none');
             });
     });
-    
-    
+
+
     let submitReachInfoButton = document.getElementById('submitReachInfo');
 
     // Add event listener to the button
@@ -1118,10 +1138,10 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();  // Prevent the form from submitting normally
 
         let errorMessageElement = document.getElementById('reachInfoFormErrorMessage');
-        
+
         // Get the form and button elements
         let reachInfoForm = document.getElementById('reachInfoForm');
-        
+
         // Create a FormData object from the form
         let formData = new FormData(reachInfoForm);
 
@@ -1234,11 +1254,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('reachInfoFormErrorMessage').classList.remove('d-none');
             });
     });
-    
+
     document.getElementById('takenInvestigationModalButton').addEventListener('click', function () {
 
-        
-        
+
+
         const investigationTypeDropdown = document.getElementById('investigation-type-select');
         // Remove existing options
         while (investigationTypeDropdown.firstChild) {
@@ -1250,9 +1270,9 @@ document.addEventListener('DOMContentLoaded', () => {
         while (investigationResultDropdown.firstChild) {
             investigationResultDropdown.removeChild(investigationResultDropdown.firstChild);
         }
-        
+
         document.getElementById('takenInvestigationForm').reset();
-        
+
         fetch('/investigation_types/')
             .then(response => {
                 if (!response.ok) {
@@ -1262,7 +1282,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(data => {
 
-                
+
 
                 let investigationTypeSelect = document.getElementById('investigation-type-select');
                 investigationTypeSelect.innerHTML = '<option value="" selected>Select Investigation Type</option>';
@@ -1276,13 +1296,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('investigation-type-select').addEventListener('change', function () {
         // Get the selected investigation type id
         let investigationTypeId = this.value;
-        
+
         const investigationResultDropdown = document.getElementById('investigation-result-select');
         // Remove existing options
         while (investigationResultDropdown.firstChild) {
             investigationResultDropdown.removeChild(investigationResultDropdown.firstChild);
         }
-        
+
         document.getElementById('id_investigation_date').value='';
 
         // If a investigation type is selected, fetch the corresponding investigation result
@@ -1291,7 +1311,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(response => response.json())
                 .then(data => {
 
-                    
+
 
                     investigationResultDropdown.innerHTML = '<option value="" selected>Select Investigation Result</option>';
                     // Append the townships to the township dropdown
@@ -1303,7 +1323,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(error => console.log(error));
         }
     });
-    
+
     document.getElementById('investigation-result-select').addEventListener('change', function () {
         // Get the selected investigation result id
         let investigationResultId = this.value;
@@ -1311,9 +1331,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear the date
         document.getElementById('id_investigation_date').value='';
 
-        
+
     });
-    
+
     let submitTakenInvestigation = document.getElementById('submitTakenInvestigation')
     submitTakenInvestigation.addEventListener('click', function (event) {
         event.preventDefault();  // Prevent the default form submission
@@ -1333,7 +1353,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             }
         }
-        
+
         let errorMessageElement = document.getElementById('takenInvestigationFormErrorMessage');
         if (!isFormValid) {
             errorMessageElement.textContent = 'Please fill out all fields.';
@@ -1382,7 +1402,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                             </div>
                                         </div>
                                         <hr>
-                                        
+
                                         <div class="row">
                                             <div class="col-sm-7">
                                                 <p class="mb-0">Investigation Date</p>
@@ -1393,10 +1413,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                         </div>
                                         <hr>
                     `;
-                    
 
 
-                    newCard += `        
+
+                    newCard += `
                                     </div>
                                 </div>
                                 <div class="card mb-4">
@@ -1404,19 +1424,19 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-7">
-                                            
+
                                             <!-- Button trigger modal -->
-                                            <button type="button" 
-                                                class="btn btn-info takenInvestigationModalButton" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#takenInvestigationModal" 
+                                            <button type="button"
+                                                class="btn btn-info takenInvestigationModalButton"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#takenInvestigationModal"
                                                 id="takenInvestigationModalButton">Add</button>
                                         </div>
                                         <div class="col-sm-5"></div>
                                     </div>
                                 </div>
                             </div>
-                                
+
                     `;
 
 
@@ -1445,13 +1465,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         //     console.log(previousCardButton);
                         //     if (previousCardButton) {
                         //         previousCardButton.style.display = 'none';
-                        //     }  
+                        //     }
                         // }
-                        
+
                     } else {
                         console.error("Couldn't find a card containing the button!");
                     }
-                    
+
 
 
                 } else {
@@ -1479,9 +1499,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('takenInvestigationFormErrorMessage').classList.remove('d-none');
             });
     });
-    
-        
-        
+
+
+
     let submitTbConfirmationButton = document.getElementById('submitTbConfirmation');
 
     // Add event listener to the button
@@ -1489,13 +1509,13 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();  // Prevent the form from submitting normally
 
         let errorMessageElement = document.getElementById('tbConfirmationFormErrorMessage');
-        
+
         // Get the form and button elements
         let tbConfirmationForm = document.getElementById('tbConfirmationForm');
-        
+
         // Create a FormData object from the form
         let formData = new FormData(tbConfirmationForm);
-        
+
         // Get client ID
         let clientId = document.getElementById('tbConfirmationForm').dataset.clientId;
 
@@ -1573,8 +1593,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     col2b.classList.add('col-sm-5');
                     col2b.innerHTML = `<p class="text-muted mb-0">${data.tb_diagnosis}</p>`;
                     row2.appendChild(col2b);
-                    
-                    
+
+
                     // Create and append new elements for 'Diagnosis Date'
                     let row3 = document.createElement('div');
                     row3.classList.add('row');
@@ -1627,7 +1647,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('tbConfirmationFormErrorMessage').classList.remove('d-none');
             });
     });
-    
+
     document.getElementById('tbTxModalButton').addEventListener('click', function () {
 
         document.getElementById('tbTxForm').reset();
@@ -1641,7 +1661,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(data => {
 
-                
+
                 let txRegimeSelect = document.getElementById('id_tx_regime');
                 txRegimeSelect.innerHTML = '<option value="" selected>Select Regime</option>';
                 txRegimeSelect.innerHTML += data.map(option => `<option value="${option.id}">${option.type}</option>`).join('');
@@ -1650,7 +1670,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error: ' + e.message);
             });
     });
-    
+
     let submitTbTxButton = document.getElementById('submitTbTx');
 
     // Add event listener to the button
@@ -1658,13 +1678,13 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();  // Prevent the form from submitting normally
 
         let errorMessageElement = document.getElementById('tbTxFormErrorMessage');
-        
+
         // Get the form and button elements
         let tbTxForm = document.getElementById('tbTxForm');
-        
+
         // Create a FormData object from the form
         let formData = new FormData(tbTxForm);
-        
+
         // Get client ID
         let clientId = document.getElementById('tbTxForm').dataset.clientId;
 
@@ -1742,8 +1762,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     col2b.classList.add('col-sm-5');
                     col2b.innerHTML = `<p class="text-muted mb-0">${data.tx_regime}</p>`;
                     row2.appendChild(col2b);
-                    
-                    
+
+
                     // Create and append new elements for 'TB Register Date'
                     let row3 = document.createElement('div');
                     row3.classList.add('row');
@@ -1797,7 +1817,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     });
 
-    
+
 
 
 

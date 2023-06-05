@@ -734,20 +734,45 @@ def refer_locations(request, id):
         location.save()
         client.stage_id = 3
         client.save()
+        print(f"{site.organization__name}")
+        if (location.id):
+            return JsonResponse({
+                'success': True,
+                'message': 'TB Refer Location successfully created.',
+                'state_region': site.state_region.name,
+                'township': site.township.name,
+                'channel': site.channel.name,
+                'org': site.organization.name,
+                'clinic_name': site.clinic_name,
+                'clinic_name_mm': site.clinic_name_mm,
+                'provider_name': site.provider_name,
+                'provider_name_mm': site.provider_name_mm,
+                'site_address': site.site_address,
+                'site_address_mm': site.site_address_mm,
+                'referred_date': refer_date,
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'message': 'Something went wrong. Please contact digital health team',
+                'error': 'Database error. Please contact digital health team',
+            })
 
-        return JsonResponse({
-            'success': True,
-            'message': 'TB Refer Location successfully created.',
-            'state_region': site.state_region.name,
-            'township': site.township.name,
-            'channel': site.channel.name,
-            'org': site.organization.name,
-            'clinic_name': site.clinic_name,
-            'clinic_name_mm': site.clinic_name_mm,
-            'site_address': site.site_address,
-            'site_address_mm': site.site_address_mm,
-            'referred_date': refer_date,
-        })
+        # return JsonResponse({
+        #     'success': True,
+        #     'message': 'TB Refer Location successfully created.',
+        #     'state_region': site.state_region.name,
+        #     'township': site.township.name,
+        #     'channel': site.channel.name,
+        #     'org': site.organization.name,
+        #     'clinic_name': site.clinic_name,
+        #     'clinic_name_mm': site.clinic_name_mm,
+        #     'provider_name': site.provider_name,
+        #     'provider_name_mm': site.provider_name_mm,
+        #     'site_address': site.site_address,
+        #     'site_address_mm': site.site_address_mm,
+        #     'referred_date': refer_date,
+        # })
 
     return JsonResponse({'error': 'Invalid request method.'}, status=400)
 
